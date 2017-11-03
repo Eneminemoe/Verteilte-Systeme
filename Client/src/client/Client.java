@@ -19,41 +19,39 @@ public class Client {
     final static int UDP_SERVER_PORT = 6542; //SERVERS UDP PORT FOR RECEIVING PACKETS
     final static int UDP_CLIENT_PORT = 6543; //This Clients UDP PORT FOR RECEIVING PACKETS
     final static int PAYLOAD = 1024;
+    final static int TIMEOUT = 3000;
     static DatagramSocket datagramSocket;
     static String answerFromServer;
 
     public Client() {
-        
-        try {
-            datagramSocket = new DatagramSocket(UDP_CLIENT_PORT);
-        } catch (SocketException ex) {
-            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-        }
 
     }
 
     /**
-     * @return String Gibt empfangene Nachricht zurück 
-     * Empfängt Nachricht UDP
+     * @return String Gibt empfangene Nachricht zurück Empfängt Nachricht UDP
      */
     private String receiveMessage() {
 
-        byte[] receivedData = new byte[PAYLOAD];
-        DatagramPacket receivedPacket = new DatagramPacket(receivedData, receivedData.length);
-
         try {
+            datagramSocket = new DatagramSocket(UDP_CLIENT_PORT);
+            datagramSocket.setSoTimeout(TIMEOUT);
+            byte[] receivedData = new byte[PAYLOAD];
+            DatagramPacket receivedPacket = new DatagramPacket(receivedData, receivedData.length);
             datagramSocket.receive(receivedPacket); //Daten empfangen
+            String data = new String(receivedPacket.getData()); //Empfangene Daten
+            return data;
         } catch (IOException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+            datagramSocket.close();
+        }finally{
+        datagramSocket.close();
         }
-        String data = new String(receivedPacket.getData()); //Empfangene Daten
-        return data;
-
+        return "Verbindung zum Server nicht möglich";
     }
-    
+
     /**
-     * @param message beihnhaltet Nachricht zum verschicken 
-     * Sendet String per UDP an den Server
+     * @param message beihnhaltet Nachricht zum verschicken Sendet String per
+     * UDP an den Server
      */
     public boolean sendMessage(String message) {
 
@@ -66,15 +64,15 @@ public class Client {
             DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, inetAddress, UDP_SERVER_PORT);
             sendSocket.send(sendPacket);
             //Message sent  
-            
-            answerFromServer=receiveMessage();
+
+            answerFromServer = receiveMessage();
 
         } catch (IOException e) {
             return false;
         } finally {
             sendSocket.close();
         }
-return true;
+        return true;
     }
 
     public String[] getAnswer() {
