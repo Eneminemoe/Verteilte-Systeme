@@ -34,11 +34,12 @@ public class Fridge {
                 Logger.getLogger(Fridge.class.getName()).log(Level.SEVERE, null, ex);
             }
             
-            takeItemOut("Milch");
+            takeItemOut("milk");
         }
     }
 
     /**
+     * @param message beihnhaltet Nachricht zum verschicken 
      * Sendet String per UDP an den Server
      */
     private static void sendMessage(String message) {
