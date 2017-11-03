@@ -17,8 +17,8 @@ import java.util.logging.Logger;
 public class Server {
 
     final static int PAYLOAD = 1024;
-    final static int PORTNUMBERUDP = 6542;
-    final static int PORNUMBERTCP = 7000;
+    final static int UDP_SERVER_PORT = 6542;
+    final static int UDP_CLIENT_PORT = 6543;
     static DatagramSocket datagramSocket; //UDP
     private static Items items;
 
@@ -30,7 +30,7 @@ public class Server {
         items = new Items();
         
         try {
-            datagramSocket = new DatagramSocket(PORTNUMBERUDP);
+            datagramSocket = new DatagramSocket(UDP_SERVER_PORT);
         } catch (SocketException ex) {
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -38,8 +38,6 @@ public class Server {
 
             String incomingMessage = receiveMessage();
             handleMessage(incomingMessage, items);
-           // System.out.println(incomingMessage);
-            System.out.println(items.getMilk().lastElement());
         }
     }
 
@@ -59,6 +57,28 @@ public class Server {
         return data;
 
     }
+    
+    /**
+     * @param message beihnhaltet Nachricht zum verschicken 
+     * Sendet String per UDP an den Server
+     */
+    public static void sendMessage(String message) {
+
+        byte[] sendData = new byte[PAYLOAD];
+        DatagramSocket sendSocket = null;
+        try {
+            sendSocket = new DatagramSocket();
+            InetAddress inetAddress = InetAddress.getByName("localhost");
+            sendData = message.getBytes();
+            DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, inetAddress, UDP_CLIENT_PORT);
+            sendSocket.send(sendPacket);           
+
+        } catch (IOException e) {
+        } finally {
+            sendSocket.close();
+        }
+
+    }
 
     /**
      *
@@ -67,7 +87,12 @@ public class Server {
     private static void handleMessage(String s, Items items) {
 
         s=s.trim(); //Comparison fails in ItemToAlter if not trimmed
-        if (s.startsWith("-")) {
+        
+        if(s.equals("updateItems")){
+            sendMessage(items.currentItems());
+        }
+        
+        else if (s.startsWith("-")) {
             s = s.substring(1);
             s = s.toLowerCase();
             items.takeItemOut(items.ItemToAlter(s));
