@@ -77,7 +77,7 @@ public class Client {
 
     public String[] getAnswer() {
 
-        String[] answer = answerFromServer.split("\\.");
+        String[] answer = answerFromServer.split("\\n");
         return answer;
     }
 }

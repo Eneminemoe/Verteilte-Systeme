@@ -92,6 +92,10 @@ public class Items {
         vec.add(x);
     }
 
+    /**
+     * @return the current amount of each Item
+     * 
+     */
     public String currentItems() {
         String[] cI = new String[5];
         cI[0] = "Milch: " + getMilk().lastElement();
@@ -99,6 +103,6 @@ public class Items {
         cI[2] = "Sausage: " + getSausage().lastElement();
         cI[3] = "Butter: " + getButter().lastElement();
         cI[4] = "Chocolate:" +getChocolate().lastElement();
-        return cI[0]+"."+cI[1]+"."+cI[2]+"."+cI[3]+"."+cI[4];
+        return cI[0]+"\n"+cI[1]+"\n"+cI[2]+"\n"+cI[3]+"\n"+cI[4];
     }
 }

@@ -5,7 +5,7 @@
  */
 package server;
 
-import java.io.IOException;
+import java.io.*;
 import java.net.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -14,12 +14,15 @@ import java.util.logging.Logger;
  *
  * @author Jens
  */
-public class Server {
+public class Server extends Thread {
 
     final static int PAYLOAD = 1024;
     final static int UDP_SERVER_PORT = 6542;
     final static int UDP_CLIENT_PORT = 6543;
+    final static int TCP_LISTENING_SOCKET = 6544;
     static DatagramSocket datagramSocket; //UDP
+    static ServerSocket welcomeSocket; //TCP-LISTENING
+    static Server tcp;
     private static Items items;
 
     /**
@@ -28,23 +31,49 @@ public class Server {
     public static void main(String[] args) {
 
         items = new Items();
-        
+
         try {
             datagramSocket = new DatagramSocket(UDP_SERVER_PORT);
+            welcomeSocket= new ServerSocket(TCP_LISTENING_SOCKET);
         } catch (SocketException ex) {
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        tcp = new Server();
+        tcp.start();
+
         while (true) {
 
-            String incomingMessage = receiveMessage();
-            handleMessage(incomingMessage, items);
+            String incomingMessage = receiveMessageUDP(); //receive blocks, until data is reiceved 
+            handleMessage(incomingMessage, getItems());
         }
     }
 
+
+    public void run(){
+    
+        
+        while(true){
+            
+        try {
+                Socket connectionSocket = welcomeSocket.accept(); //accept blocks, until connection establishes
+                TCPHandling newConnection = new TCPHandling(connectionSocket);
+                newConnection.start();
+                
+            } catch (IOException ex) {
+                Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        
+        }
+    }
+    
+    
     /**
      * @return String Empfängt UDP-Nachricht und gibt diese als String zurück
      */
-    private static String receiveMessage() {
+    private static String receiveMessageUDP() {
 
         byte[] receivedData = new byte[PAYLOAD];
         DatagramPacket receivedPacket = new DatagramPacket(receivedData, receivedData.length);
@@ -57,12 +86,12 @@ public class Server {
         return data;
 
     }
-    
+
     /**
-     * @param message beihnhaltet Nachricht zum verschicken 
-     * Sendet String per UDP an den Server
+     * @param message beihnhaltet Nachricht zum verschicken Sendet String per
+     * UDP an den Server
      */
-    public static void sendMessage(String message) {
+    public static void sendMessageUDP(String message) {
 
         byte[] sendData = new byte[PAYLOAD];
         DatagramSocket sendSocket = null;
@@ -71,7 +100,7 @@ public class Server {
             InetAddress inetAddress = InetAddress.getByName("localhost");
             sendData = message.getBytes();
             DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, inetAddress, UDP_CLIENT_PORT);
-            sendSocket.send(sendPacket);           
+            sendSocket.send(sendPacket);
 
         } catch (IOException e) {
         } finally {
@@ -79,6 +108,9 @@ public class Server {
         }
 
     }
+    
+
+    
 
     /**
      *
@@ -86,17 +118,15 @@ public class Server {
      */
     private static void handleMessage(String s, Items items) {
 
-        s=s.trim(); //Comparison fails in ItemToAlter if not trimmed
-        
-        if(s.equals("updateItems")){
-            sendMessage(items.currentItems());
-        }
-        
-        else if (s.startsWith("-")) {
+        s = s.trim(); //Comparison fails in ItemToAlter if not trimmed
+
+        if (s.equals("updateItems")) {
+            sendMessageUDP(items.currentItems());
+        } else if (s.startsWith("-")) {
             s = s.substring(1);
             s = s.toLowerCase();
             items.takeItemOut(items.ItemToAlter(s));
-           
+
         } else if (s.startsWith("+")) {
             s = s.substring(1);
             s = s.toLowerCase();
@@ -104,5 +134,12 @@ public class Server {
         } else {
             System.out.println("Wrong Message");
         }
+    }
+
+    /**
+     * @return the items
+     */
+    public static Items getItems() {
+        return items;
     }
 }
