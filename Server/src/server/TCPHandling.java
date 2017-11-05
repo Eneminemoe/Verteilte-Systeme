@@ -13,6 +13,10 @@ import java.util.logging.Logger;
 /**
  *
  * @author Jens
+ * 
+ * Übernimmt Kommunkation mittels TCP
+ * 
+ * //HTML Part nicht elegant, muss vielleicht geändert werden, um zukünftigen Anforderungen zu genügen
  */
 public class TCPHandling extends Thread {
 
@@ -54,6 +58,11 @@ public class TCPHandling extends Thread {
 
     }
 
+    /**
+     * @return String
+     * 
+     * 
+     */
     private static String receiveMessageTCP() {
 
         String receivedMessage = "";

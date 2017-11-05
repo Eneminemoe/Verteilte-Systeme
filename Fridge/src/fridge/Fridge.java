@@ -14,6 +14,8 @@ import java.util.logging.Logger;
 /**
  *
  * @author Jens
+ * 
+ * Simuliert einen Kühlschrank mit Sensoren, der Artikel erfasst.
  */
 public class Fridge {
 
@@ -61,8 +63,8 @@ public class Fridge {
     }
 
     /**
-     * @param type entspricht dem Item Hängt ein Minus vor den String zur
-     * Signaliesirung, dass ein Artikel rausgenommen wurde
+     * @param type entspricht dem Item
+     * Hängt ein Minus vor den String zur Signaliesirung, dass ein Artikel rausgenommen wurde
      *
      */
     private static void takeItemOut(String type) {
@@ -70,8 +72,8 @@ public class Fridge {
     }
 
     /**
-     * @param type entspricht Item Hängt ein Plus vor den String zur
-     * Signaliesierung, dass ein Artikel hinzugefügt wurde
+     * @param type entspricht Item
+     * Hängt ein Plus vor den String zur Signaliesierung, dass ein Artikel hinzugefügt wurde
      *
      */
     private static void putItemIn(String type) {

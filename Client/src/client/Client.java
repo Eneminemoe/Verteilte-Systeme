@@ -13,6 +13,9 @@ import java.util.logging.Logger;
 /**
  *
  * @author Jens
+ * 
+ * Kommunikation zwischen Server und GUI
+ * 
  */
 public class Client {
 
@@ -28,7 +31,9 @@ public class Client {
     }
 
     /**
-     * @return String Gibt empfangene Nachricht zurück Empfängt Nachricht UDP
+     * @return String Gibt empfangene Nachricht zurück
+     * 
+     * Empfängt Nachricht UDP
      */
     private String receiveMessage() {
 
@@ -50,8 +55,9 @@ public class Client {
     }
 
     /**
-     * @param message beihnhaltet Nachricht zum verschicken Sendet String per
-     * UDP an den Server
+     * @param message beihnhaltet Nachricht zum verschicken
+     * @return boolean kontrolliert, ob Nachricht gesendet werden konnte
+     *  Sendet String per UDP an den Server
      */
     public boolean sendMessage(String message) {
 

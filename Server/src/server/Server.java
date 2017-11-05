@@ -13,6 +13,10 @@ import java.util.logging.Logger;
 /**
  *
  * @author Jens
+ * 
+ * Server, der Kommunikation mittels UDP und TCP realisiert
+ * UDP wird in der main behandelt und TCP im Thread tcp
+ * 
  */
 public class Server extends Thread {
 
@@ -23,7 +27,7 @@ public class Server extends Thread {
     static DatagramSocket datagramSocket; //UDP
     static ServerSocket welcomeSocket; //TCP-LISTENING
     static Server tcp;
-    private static Items items;
+    private static Items items; //beinhaltet den aktuellen Stand der Artikel
 
     /**
      * @param args the command line arguments
@@ -46,19 +50,22 @@ public class Server extends Thread {
 
         while (true) {
 
-            String incomingMessage = receiveMessageUDP(); //receive blocks, until data is reiceved 
-            handleMessage(incomingMessage, getItems());
+            String incomingMessage = receiveMessageUDP(); //receiveMessageUDP blockiert, bis Nachricht eintrifft
+            handleMessage(incomingMessage, getItems()); 
         }
     }
 
-
+/**
+ * Bearbeitet eingehende TCP-Anfragen 
+ */
+    @Override
     public void run(){
     
         
         while(true){
             
         try {
-                Socket connectionSocket = welcomeSocket.accept(); //accept blocks, until connection establishes
+                Socket connectionSocket = welcomeSocket.accept();
                 TCPHandling newConnection = new TCPHandling(connectionSocket);
                 newConnection.start();
                 
@@ -71,7 +78,8 @@ public class Server extends Thread {
     
     
     /**
-     * @return String Empfängt UDP-Nachricht und gibt diese als String zurück
+     * @return String 
+     * Empfängt UDP-Nachricht und gibt diese als String zurück
      */
     private static String receiveMessageUDP() {
 
@@ -88,8 +96,8 @@ public class Server extends Thread {
     }
 
     /**
-     * @param message beihnhaltet Nachricht zum verschicken Sendet String per
-     * UDP an den Server
+     * @param message beihnhaltet Nachricht zum verschicken
+     * Sendet String per UDP an den Server
      */
     public static void sendMessageUDP(String message) {
 
@@ -113,8 +121,7 @@ public class Server extends Thread {
     
 
     /**
-     *
-     * Server kontrolliert ob Item genommen oder hinzugefügt wurde
+     * Kontrolliert ob Item genommen oder hinzugefügt wurde und verarbeitet UDP-Nachrichten
      */
     private static void handleMessage(String s, Items items) {
 
