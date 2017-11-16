@@ -3,6 +3,8 @@ Termin 1: Sprache: JAVA
 - Kühlschrank:
   - Sensoren, die das Reinlegen und Rausnehmen von Artikeln simulieren
   - Kommunikation zum Server mittels UDP
+  - Aufbau der Nachricht: String bestehend aus "+" oder "-" und  "Artikel" 
+		bsp: "+milch" um eine Einheit Milch in den Kühlschrank zu legen
 
 - Zentrale/Server:
   - Übernimmt die Kontrolle über den Füllstand
@@ -10,19 +12,36 @@ Termin 1: Sprache: JAVA
   - Historie mittels Vektoren festgehalten
   
 - Tests:
-  - nicht funktional: Kühlschrank sendet dauerhaft Nachrichten per UDP. Wie verhält sich das System
   - funktional: abwechselnd ein und Ausnahme eines Artikels, stimmt die Menge noch?
-  -Performancetest: Wie lange dauert die Verarbeitung einer Nachricht?
+  - Performancetest: Wie lange dauert die Verarbeitung einer Nachricht?
+  
   
   
 Termin 2:
 
   - Server erweitern für Threads
   - Thread bearbeitet TCP-Anfragen
+	Main-Thread bearbeitet UDP Kommunikation während neu gestarteter Thread TCP bearbeitet 
   - Ausgabe über den Browser über einfachen String im HTML Format
   
 -Tests:
     - nicht funktional: dauerhafte TCP Anfrage, wie reagiert das System (Stresstest)
     - funktional: 100 TCP-Verbindungen gleichzeitig
-    - Performance: wie lange dauert die Bearbeitung 
+    - Performance: wie lange dauert die Bearbeitung einer Verbindung?
+
+Termin 3:
+
+  - Artikel nachbestellen, wenn nur noch 3 vorhanden sind
+  - Bestellvorgang mit Antwort, dass Bestellung eingegangen ist und ausgeliefert wurde TCP
+  - Sensor reagiert auf Antwort
+  - Rechnung über bestellte Artikel im Webbrowser anzeigen
+  - Preise entsprechend in EURO / L oder 100 Gramm
+  - Bestellen per Webbrowser (GUI ?)
+
+Termin 4:
+
+  - Periodisch Angebot der Lieferanten
+  - 1 Publish Kanal für Angebote, 1 für Informationen(wer hat wie viel gekauft) : Lieferant
+  - Kunden erhalten Nachrichten per Subscribe
+  
   
