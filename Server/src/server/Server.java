@@ -13,10 +13,10 @@ import java.util.logging.Logger;
 /**
  *
  * @author Jens
- * 
- * Server, der Kommunikation mittels UDP und TCP realisiert
- * UDP wird in der main behandelt und TCP im Thread tcp
- * 
+ *
+ * Server, der Kommunikation mittels UDP und TCP realisiert UDP wird in der main
+ * behandelt und TCP im Thread tcp
+ *
  */
 public class Server extends Thread {
 
@@ -28,6 +28,7 @@ public class Server extends Thread {
     static ServerSocket welcomeSocket; //TCP-LISTENING
     static Server tcp;
     private static Items items; //beinhaltet den aktuellen Stand der Artikel
+    private static HTMLMaker htmlmaker;
 
     /**
      * @param args the command line arguments
@@ -35,51 +36,49 @@ public class Server extends Thread {
     public static void main(String[] args) {
 
         items = new Items();
+        htmlmaker = new HTMLMaker(items.getCurrentItemsArray());
 
         try {
             datagramSocket = new DatagramSocket(UDP_SERVER_PORT);
-            welcomeSocket= new ServerSocket(TCP_LISTENING_SOCKET);
+            welcomeSocket = new ServerSocket(TCP_LISTENING_SOCKET);
         } catch (SocketException ex) {
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         tcp = new Server();
         tcp.start();
 
         while (true) {
 
             String incomingMessage = receiveMessageUDP(); //receiveMessageUDP blockiert, bis Nachricht eintrifft
-            handleMessage(incomingMessage, getItems()); 
+            handleMessage(incomingMessage, getItems());
         }
     }
 
-/**
- * Bearbeitet eingehende TCP-Anfragen 
- */
+    /**
+     * Bearbeitet eingehende TCP-Anfragen
+     */
     @Override
-    public void run(){
-    
-        
-        while(true){
-            
-        try {
+    public void run() {
+
+        while (true) {
+
+            try {
                 Socket connectionSocket = welcomeSocket.accept();
                 TCPHandling newConnection = new TCPHandling(connectionSocket);
                 newConnection.start();
-                
+
             } catch (IOException ex) {
                 Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
             }
-        
+
         }
     }
-    
-    
+
     /**
-     * @return String 
-     * Empfängt UDP-Nachricht und gibt diese als String zurück
+     * @return String Empfängt UDP-Nachricht und gibt diese als String zurück
      */
     private static String receiveMessageUDP() {
 
@@ -96,8 +95,8 @@ public class Server extends Thread {
     }
 
     /**
-     * @param message beihnhaltet Nachricht zum verschicken
-     * Sendet String per UDP an den Server
+     * @param message beihnhaltet Nachricht zum verschicken Sendet String per
+     * UDP an den Server
      */
     public static void sendMessageUDP(String message) {
 
@@ -116,12 +115,10 @@ public class Server extends Thread {
         }
 
     }
-    
-
-    
 
     /**
-     * Kontrolliert ob Item genommen oder hinzugefügt wurde und verarbeitet UDP-Nachrichten
+     * Kontrolliert ob Item genommen oder hinzugefügt wurde und verarbeitet
+     * UDP-Nachrichten
      */
     private static void handleMessage(String s, Items items) {
 
@@ -133,11 +130,13 @@ public class Server extends Thread {
             s = s.substring(1);
             s = s.toLowerCase();
             items.takeItemOut(items.ItemToAlter(s));
+            htmlmaker.setItems(items.getCurrentItemsArray());
 
         } else if (s.startsWith("+")) {
             s = s.substring(1);
             s = s.toLowerCase();
             items.putItemIn(items.ItemToAlter(s));
+            htmlmaker.setItems(items.getCurrentItemsArray());
         } else {
             System.out.println("Wrong Message");
         }

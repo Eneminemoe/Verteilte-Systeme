@@ -46,7 +46,7 @@ public class TCPHandling extends Thread {
                 && (message.contains("HTTP") || message.contains("HTTPS"))
                 && message.contains("index.html")) {
 
-            sendMessageTCP();
+            sendMessageTCP(HTTPANSWER + Server.getItems().currentItems().replace("\n", "<br/>"));
 
         }
         try {
@@ -76,10 +76,10 @@ public class TCPHandling extends Thread {
         return receivedMessage;
     }
 
-    private static void sendMessageTCP() {
+    private static void sendMessageTCP(String message) {
 
         try {
-            outToClient.writeBytes(HTTPANSWER + Server.getItems().currentItems().replace("\n", "<br/>")); //Ziemlich hässlich, funktioniert aber
+            outToClient.writeBytes(message); //Ziemlich hässlich, funktioniert aber
         } catch (IOException ex) {
             Logger.getLogger(TCPHandling.class.getName()).log(Level.SEVERE, null, ex);
         }

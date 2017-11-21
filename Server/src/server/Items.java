@@ -21,6 +21,7 @@ public class Items {
     private Vector sausage = new Vector();
     private Vector butter = new Vector();
     private Vector chocolate = new Vector();
+    private String[] cI = new String[5];
 
     
     public Items() {
@@ -79,13 +80,24 @@ public class Items {
      * 
      */
     public String currentItems() {
-        String[] cI = new String[5];
+        
         cI[0] = "Milch: " + getMilk().lastElement();
         cI[1] = "Yoghurt: " + getYoguhrt().lastElement();
         cI[2] = "Sausage: " + getSausage().lastElement();
         cI[3] = "Butter: " + getButter().lastElement();
         cI[4] = "Chocolate:" +getChocolate().lastElement();
         return cI[0]+"\n"+cI[1]+"\n"+cI[2]+"\n"+cI[3]+"\n"+cI[4];
+    }
+    
+    public String[] getCurrentItemsArray(){
+    
+        cI[0] = "Milch: " + getMilk().lastElement();
+        cI[1] = "Yoghurt: " + getYoguhrt().lastElement();
+        cI[2] = "Sausage: " + getSausage().lastElement();
+        cI[3] = "Butter: " + getButter().lastElement();
+        cI[4] = "Chocolate:" +getChocolate().lastElement();
+        
+        return cI;
     }
     
         /**
