@@ -48,12 +48,9 @@ public class HTMLMaker {
                 + "  <body>\n"
                 + " <h1>Ihre Artikel:</h1>"
                 + listOfItems
-                
-                + "<button type=\"submit\" name=\"action\" value=\"0\">Aktualisieren!</button>"
+                + "<input type=\"button\" value=\"Aktualisieren\" onClick=\"location.href=location.href\">"
                 + "  </body>\n"
                 + "</html>";
-
-        
 
         try {
             writer = new BufferedWriter(new OutputStreamWriter(
@@ -70,7 +67,6 @@ public class HTMLMaker {
             return true;
         }
 
-        
     }
 
 }

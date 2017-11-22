@@ -13,7 +13,7 @@ Termin 1: Sprache: JAVA
   
 - Tests:
   - funktional: abwechselnd ein und Ausnahme eines Artikels, stimmt die Menge noch?
-  - Performancetest: Wie lange dauert die Verarbeitung einer Nachricht?
+  - Performancetest: Wie lange dauert das Erfassen einer Aktion(Artikelveränderung) und das Versenden dieser Information?
   
   
   
@@ -22,12 +22,12 @@ Termin 2:
   - Server erweitern für Threads
   - Thread bearbeitet TCP-Anfragen
 	Main-Thread bearbeitet UDP Kommunikation während neu gestarteter Thread TCP bearbeitet 
-  - Ausgabe über den Browser über einfachen String im HTML Format
+  - Ausgabe über den Browser mittels HTML-File
   
 -Tests:
     - nicht funktional: dauerhafte TCP Anfrage, wie reagiert das System (Stresstest)
     - funktional: 100 TCP-Verbindungen gleichzeitig
-    - Performance: wie lange dauert die Bearbeitung einer Verbindung?
+    - Performance: wie lange dauert die Bearbeitung einer Anfrage und das Versenden der Information(HTML-FILE)?
 
 Termin 3:
 

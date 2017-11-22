@@ -13,17 +13,21 @@ import java.util.logging.Logger;
 /**
  *
  * @author Jens
- * 
+ *
  * Übernimmt Kommunkation mittels TCP
- * 
- * //HTML Part nicht elegant, muss vielleicht geändert werden, um zukünftigen Anforderungen zu genügen
+ *
+ * //HTML Part nicht elegant, muss vielleicht geändert werden, um zukünftigen
+ * Anforderungen zu genügen
  */
 public class TCPHandling extends Thread {
 
     static Socket connection;
-    static DataOutputStream outToClient;
-    static BufferedReader inFromClient;
+    static DataOutputStream outToClient = null;
+    static BufferedReader inFromClient = null;
+    static FileInputStream fis = null;
+    static BufferedInputStream bis = null;
     final static String HTTPANSWER = "HTTP/1.1 200 OK\nContent-Type: text/html\n\n";
+    File htmlfile;
 
     public TCPHandling(Socket incomingConnection) {
 
@@ -46,10 +50,13 @@ public class TCPHandling extends Thread {
                 && (message.contains("HTTP") || message.contains("HTTPS"))
                 && message.contains("index.html")) {
 
-            sendMessageTCP(HTTPANSWER + Server.getItems().currentItems().replace("\n", "<br/>"));
+            sendMessageTCP(HTTPANSWER);
+            sendFileTCP("index.html");
 
         }
         try {
+            fis.close();
+            bis.close();
             inFromClient.close();
             outToClient.close();
         } catch (IOException ex) {
@@ -60,8 +67,8 @@ public class TCPHandling extends Thread {
 
     /**
      * @return String
-     * 
-     * 
+     *
+     *
      */
     private static String receiveMessageTCP() {
 
@@ -80,6 +87,20 @@ public class TCPHandling extends Thread {
 
         try {
             outToClient.writeBytes(message); //Ziemlich hässlich, funktioniert aber
+        } catch (IOException ex) {
+            Logger.getLogger(TCPHandling.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void sendFileTCP(String path) {
+
+        try {
+            htmlfile = new File(path);
+            byte[] filecontent = new byte[(int) htmlfile.length()];
+            fis = new FileInputStream(htmlfile);
+            bis = new BufferedInputStream(fis);
+            bis.read(filecontent, 0, filecontent.length);
+            outToClient.write(filecontent);
         } catch (IOException ex) {
             Logger.getLogger(TCPHandling.class.getName()).log(Level.SEVERE, null, ex);
         }

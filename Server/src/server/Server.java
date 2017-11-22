@@ -63,6 +63,8 @@ public class Server extends Thread {
     @Override
     public void run() {
 
+        //testFunction(1); //testet die Dauer einer Verbindung
+        
         while (true) {
 
             try {
@@ -147,5 +149,40 @@ public class Server extends Thread {
      */
     public static Items getItems() {
         return items;
+    }
+
+    /**
+     * @param int test
+     *
+     * test = 1: Wie lange dauert das Bearbeiten der Anfrage und Versenden der HTML FILE
+     */
+    private static void testFunction(int test) {
+
+        switch (test) {
+            case 1:
+                long startTime,
+                 endTime,
+                 duration;
+
+                try {
+                    Socket connectionSocket = welcomeSocket.accept();
+                    startTime = System.nanoTime();
+                    TCPHandling newConnection = new TCPHandling(connectionSocket);
+                    newConnection.start();
+                    while (newConnection.isAlive()) {
+                    }
+                    endTime = System.nanoTime();
+                    duration = endTime - startTime;
+                    System.out.println("Time elapsed: " + duration + " nanoseconds."); //Zeitmessung
+                    System.out.println("Time elapsed: " + ((double) duration / 1000000) + " milliseconds."); //zeitmessung
+                    System.out.println("Time elapsed: " + ((double) duration / 1000000000) + " seconds."); //zeitmessung
+                } catch (IOException ex) {
+                    Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+                break;
+            default:
+                System.out.println("Test nicht vorhanden");
+        }
     }
 }
