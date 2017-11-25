@@ -33,6 +33,8 @@ public class Fridge {
         //Hier kann man nun Sensoren simulieren, um Gegenstände rauszunehmen und einzufügen
         while (true) {
 
+            
+            testFunction(1);
             putItemIn("milk");
             waitSeconds(2);
 
@@ -109,9 +111,9 @@ public class Fridge {
                  endTime,
                  duration;
 
-                startTime = System.nanoTime();
-                putItemIn("milk");
-                endTime = System.nanoTime();
+                startTime = System.nanoTime(); // Zeit messen
+                putItemIn("milk"); // Nachricht versenden 
+                endTime = System.nanoTime(); // Zeit messen
                 duration = endTime - startTime;
                 System.out.println("Time elapsed: " + duration + " nanoseconds."); //Zeitmessung
                 System.out.println("Time elapsed: " + ((double) duration / 1000000) + " milliseconds."); //zeitmessung

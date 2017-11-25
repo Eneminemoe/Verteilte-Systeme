@@ -63,7 +63,7 @@ public class Server extends Thread {
     @Override
     public void run() {
 
-        //testFunction(1); //testet die Dauer einer Verbindung
+        testFunction(1); //testet die Dauer einer Verbindung
         
         while (true) {
 
@@ -133,12 +133,14 @@ public class Server extends Thread {
             s = s.toLowerCase();
             items.takeItemOut(items.ItemToAlter(s));
             htmlmaker.setItems(items.getCurrentItemsArray());
+            //System.out.println(items.getCurrentItemsArray()[0]);
 
         } else if (s.startsWith("+")) {
             s = s.substring(1);
             s = s.toLowerCase();
             items.putItemIn(items.ItemToAlter(s));
             htmlmaker.setItems(items.getCurrentItemsArray());
+            //System.out.println(items.getCurrentItemsArray()[0]);
         } else {
             System.out.println("Wrong Message");
         }
@@ -165,14 +167,14 @@ public class Server extends Thread {
                  duration;
 
                 try {
-                    Socket connectionSocket = welcomeSocket.accept();
-                    startTime = System.nanoTime();
+                    Socket connectionSocket = welcomeSocket.accept(); //Verbindung aufbauen
+                    startTime = System.nanoTime(); //Zeit gemessen 11:02:20341
                     TCPHandling newConnection = new TCPHandling(connectionSocket);
                     newConnection.start();
-                    while (newConnection.isAlive()) {
+                    while (newConnection.isAlive()) { // wenn Verbindung zu Ende
                     }
-                    endTime = System.nanoTime();
-                    duration = endTime - startTime;
+                    endTime = System.nanoTime(); // Zeit messen 11:02:56245
+                    duration = endTime - startTime; // Berechnung der Dauer
                     System.out.println("Time elapsed: " + duration + " nanoseconds."); //Zeitmessung
                     System.out.println("Time elapsed: " + ((double) duration / 1000000) + " milliseconds."); //zeitmessung
                     System.out.println("Time elapsed: " + ((double) duration / 1000000000) + " seconds."); //zeitmessung

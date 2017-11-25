@@ -46,6 +46,10 @@ public class TCPHandling extends Thread {
     public void run() {
 
         String message = receiveMessageTCP();
+        System.out.println(message);
+        
+        if(message.contains("request"))System.out.println("Button gedrückt");
+        
         if (message.contains("GET")
                 && (message.contains("HTTP") || message.contains("HTTPS"))
                 && message.contains("index.html")) {
