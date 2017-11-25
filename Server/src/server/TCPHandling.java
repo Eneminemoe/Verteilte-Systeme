@@ -55,8 +55,13 @@ public class TCPHandling extends Thread {
                 && message.contains("index.html")) {
 
             sendMessageTCP(HTTPANSWER);
-            sendFileTCP("index.html");
-
+            
+            if(message.contains("request=receipt")){
+            //Rechnung schicken
+            }else{
+                //sonst normale index.html
+                sendFileTCP("index.html");}
+            
         }
         try {
             fis.close();
