@@ -76,15 +76,22 @@ public class TCPHandling extends Thread {
 
     /**
      * @return String
-     *
+     * receives Message per TCP an returns the value of it
      *
      */
     private static String receiveMessageTCP() {
 
         String receivedMessage = "";
+        String tmp;
+        boolean done=false; 
 
         try {
-            receivedMessage = inFromClient.readLine();
+            while(!done){
+            
+                tmp= inFromClient.readLine();
+                receivedMessage = receivedMessage+ tmp;
+                if(tmp.equals(""))done=true; //End of Message -> done
+            }
         } catch (IOException ex) {
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
         }

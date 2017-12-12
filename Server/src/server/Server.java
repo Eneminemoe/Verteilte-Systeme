@@ -63,7 +63,7 @@ public class Server extends Thread {
     @Override
     public void run() {
 
-        testFunction(1); //testet die Dauer einer Verbindung
+        //testFunction(1); //testet die Dauer einer Verbindung
         
         while (true) {
 
