@@ -46,13 +46,22 @@ public class TCPHandling extends Thread {
     public void run() {
 
         String message = receiveMessageTCP();
+        System.out.println(message);
+        
+        if(message.contains("request"))System.out.println("Button gedrückt");
+        
         if (message.contains("GET")
                 && (message.contains("HTTP") || message.contains("HTTPS"))
                 && message.contains("index.html")) {
 
             sendMessageTCP(HTTPANSWER);
-            sendFileTCP("index.html");
-
+            
+            if(message.contains("request=receipt")){
+            //Rechnung schicken
+            }else{
+                //sonst normale index.html
+                sendFileTCP("index.html");}
+            
         }
         try {
             fis.close();

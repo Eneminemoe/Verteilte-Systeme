@@ -34,6 +34,7 @@ public class Fridge {
         while (true) {
 
 
+
             takeItemOut("milk");
             waitSeconds(1);
         }
@@ -107,9 +108,9 @@ public class Fridge {
                  endTime,
                  duration;
 
-                startTime = System.nanoTime();
-                putItemIn("milk");
-                endTime = System.nanoTime();
+                startTime = System.nanoTime(); // Zeit messen
+                putItemIn("milk"); // Nachricht versenden 
+                endTime = System.nanoTime(); // Zeit messen
                 duration = endTime - startTime;
                 System.out.println("Time elapsed: " + duration + " nanoseconds."); //Zeitmessung
                 System.out.println("Time elapsed: " + ((double) duration / 1000000) + " milliseconds."); //zeitmessung

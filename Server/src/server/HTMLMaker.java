@@ -35,6 +35,7 @@ public class HTMLMaker {
 
         for (String s : items) {
             listOfItems += "<li>" + s + "</li>";
+            // listOfItmes = listofItems + "<li>" + s + "</li>";
         }
         listOfItems += "</ul>";
 
@@ -50,13 +51,16 @@ public class HTMLMaker {
                 + " <h1>Ihre Artikel:</h1>"
                 + listOfItems
                 + "<input type=\"button\" value=\"Aktualisieren\" onClick=\"location.href=location.href\">"
+                + "<form action=\"\" method=\"get\">"
+                + "<input type=\"hidden\" value=\"receipt\" name=\"request\">"
+                + "<input type=\"submit\" value=\"Letzte Bestellung anzeigen\" formtarget=\"_blank\">"
                 + "  </body>\n"
                 + "</html>";
 
         try {
             writer = new BufferedWriter(new OutputStreamWriter(
                     new FileOutputStream("index.html"), "utf-8"));
-            writer.write(html);
+            writer.write(html);  //Datei schreiben
         } catch (IOException ex) {
             // report
             return false;
