@@ -33,11 +33,9 @@ public class Fridge {
         //Hier kann man nun Sensoren simulieren, um Gegenstände rauszunehmen und einzufügen
         while (true) {
 
-            putItemIn("milk");
-            waitSeconds(2);
 
             takeItemOut("milk");
-            waitSeconds(2);
+            waitSeconds(1);
         }
     }
 

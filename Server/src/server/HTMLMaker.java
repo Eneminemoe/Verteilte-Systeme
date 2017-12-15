@@ -43,6 +43,7 @@ public class HTMLMaker {
                 + "  <head>\n"
                 + "    <meta charset=\"utf-8\">\n"
                 + "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n"
+                +"     <meta http-equiv=\"refresh\" content=\"1\" />\n"
                 + "    <title>Kühlschrank</title>\n"
                 + "  </head>\n"
                 + "  <body>\n"

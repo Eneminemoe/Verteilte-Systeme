@@ -10,11 +10,10 @@ import java.util.Vector;
 /**
  *
  * @author Jens
- * 
+ *
  * Beihnhaltet Informationen zum aktuellen Artikelstand
  */
 public class Items {
-
 
     private Vector milk = new Vector();
     private Vector yoguhrt = new Vector();
@@ -23,7 +22,6 @@ public class Items {
     private Vector chocolate = new Vector();
     private String[] cI = new String[5];
 
-    
     public Items() {
         milk.add(10);
         yoguhrt.add(10);
@@ -33,8 +31,7 @@ public class Items {
     }
 
     /**
-     * @return Vector
-     * gibt den zu ändernden Artikel zurück
+     * @return Vector gibt den zu ändernden Artikel zurück
      */
     public Vector ItemToAlter(String item) {
         switch (item) {
@@ -54,20 +51,22 @@ public class Items {
     }
 
     /**
-     * @param vec zu ändernder Artikel
-     * Nimmt Artikel aus dem Kühlschrank und speichert die neue Anzahl
+     * @param vec zu ändernder Artikel Nimmt Artikel aus dem Kühlschrank und
+     * speichert die neue Anzahl
      */
-    public void takeItemOut(Vector vec) {
+    public int takeItemOut(Vector vec) {
         int x = (int) vec.lastElement();
         if (x > 0) { //wenn Kühlschrank leer kann nichts entfernt werden
             x--;
             vec.add(x);
+            return x;
         }
+        return 0;
     }
 
     /**
-     * @param vec zu ändernder Artikel
-     * Legt Artikel in den Kühlschrank und speichert neue Anzahl 
+     * @param vec zu ändernder Artikel Legt Artikel in den Kühlschrank und
+     * speichert neue Anzahl
      */
     public void putItemIn(Vector vec) {
         int x = (int) vec.lastElement();
@@ -77,30 +76,30 @@ public class Items {
 
     /**
      * @return the current amount of each Item
-     * 
+     *
      */
     public String currentItems() {
-        
+
         cI[0] = "Milch: " + getMilk().lastElement();
         cI[1] = "Yoghurt: " + getYoguhrt().lastElement();
         cI[2] = "Sausage: " + getSausage().lastElement();
         cI[3] = "Butter: " + getButter().lastElement();
-        cI[4] = "Chocolate:" +getChocolate().lastElement();
-        return cI[0]+"\n"+cI[1]+"\n"+cI[2]+"\n"+cI[3]+"\n"+cI[4];
+        cI[4] = "Chocolate:" + getChocolate().lastElement();
+        return cI[0] + "\n" + cI[1] + "\n" + cI[2] + "\n" + cI[3] + "\n" + cI[4];
     }
-    
-    public String[] getCurrentItemsArray(){
-    
+
+    public String[] getCurrentItemsArray() {
+
         cI[0] = "Milch: " + getMilk().lastElement();
         cI[1] = "Yoghurt: " + getYoguhrt().lastElement();
         cI[2] = "Sausage: " + getSausage().lastElement();
         cI[3] = "Butter: " + getButter().lastElement();
-        cI[4] = "Chocolate:" +getChocolate().lastElement();
-        
+        cI[4] = "Chocolate:" + getChocolate().lastElement();
+
         return cI;
     }
-    
-        /**
+
+    /**
      * @return the milk
      */
     public Vector getMilk() {
@@ -133,5 +132,15 @@ public class Items {
      */
     public Vector getChocolate() {
         return chocolate;
+    }
+
+    public void changeItems(String s) {
+        s=s.replaceAll("\\s","");
+        int tmp = Character.getNumericValue(s.charAt(0));
+        s = s.substring(1);
+        s=s.substring(0, s.length()-9);
+        System.out.println(s);
+        ItemToAlter(s).add((int) ItemToAlter(s).lastElement() + tmp);
+
     }
 }
