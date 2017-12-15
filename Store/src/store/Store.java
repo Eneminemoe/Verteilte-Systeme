@@ -38,11 +38,15 @@ public class Store implements StoreService.Iface {
     @Override
     public String order(String message) throws TException {
 
+        
+        System.out.println(message);
+        
         message = message.toLowerCase();
         if (Character.isDigit(message.charAt(0))) {
             int tmp = Character.getNumericValue(message.charAt(0));
             message = message.trim();
-            message = message.substring(1);
+            message = message.replaceAll("[^a-z]", "");
+            
             switch (message) {
                 
                 case "milk":

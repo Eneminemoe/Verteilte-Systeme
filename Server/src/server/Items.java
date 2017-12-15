@@ -80,7 +80,7 @@ public class Items {
      */
     public String currentItems() {
 
-        cI[0] = "Milch: " + getMilk().lastElement();
+        cI[0] = "Milk: " + getMilk().lastElement();
         cI[1] = "Yoghurt: " + getYoguhrt().lastElement();
         cI[2] = "Sausage: " + getSausage().lastElement();
         cI[3] = "Butter: " + getButter().lastElement();
@@ -90,7 +90,7 @@ public class Items {
 
     public String[] getCurrentItemsArray() {
 
-        cI[0] = "Milch: " + getMilk().lastElement();
+        cI[0] = "Milk: " + getMilk().lastElement();
         cI[1] = "Yoghurt: " + getYoguhrt().lastElement();
         cI[2] = "Sausage: " + getSausage().lastElement();
         cI[3] = "Butter: " + getButter().lastElement();
@@ -135,12 +135,18 @@ public class Items {
     }
 
     public void changeItems(String s) {
-        s=s.replaceAll("\\s","");
+        if (s.equals("")) {
+            return;
+        }
+        s = s.replaceAll("\\s", "");
         int tmp = Character.getNumericValue(s.charAt(0));
         s = s.substring(1);
-        s=s.substring(0, s.length()-9);
+        s = s.substring(0, s.length() - 9);
         System.out.println(s);
-        ItemToAlter(s).add((int) ItemToAlter(s).lastElement() + tmp);
+        try {
+            ItemToAlter(s).add((int) ItemToAlter(s).lastElement() + tmp);
+        } catch (Exception e) {
+        }
 
     }
 }

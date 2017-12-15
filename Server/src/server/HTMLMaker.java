@@ -34,7 +34,10 @@ public class HTMLMaker {
         String listOfItems = "<ul>";
 
         for (String s : items) {
-            listOfItems += "<li>" + s + "</li>";
+            listOfItems += "<li>" + s + "<input type=\"submit\" value=\"nachbestellen\" name =\"";
+            s=s.replaceAll("[^A-Za-z]", "");
+            listOfItems += s;
+            listOfItems += "\" onClick=\"return buttonClick(this)\">" + "</li>";
             // listOfItmes = listofItems + "<li>" + s + "</li>";
         }
         listOfItems += "</ul>";
@@ -44,16 +47,20 @@ public class HTMLMaker {
                 + "  <head>\n"
                 + "    <meta charset=\"utf-8\">\n"
                 + "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n"
-                +"     <meta http-equiv=\"refresh\" content=\"1\" />\n"
+               // + "     <meta http-equiv=\"refresh\" content=\"2\" />\n"
                 + "    <title>Kühlschrank</title>\n"
+                + "         <script>function buttonClick(theButton){\n"
+                + "             document.getElementById('clicked_button').value = theButton.name;\n"
+                + "             return true;}\n"
+                + "     </script>"
                 + "  </head>\n"
                 + "  <body>\n"
                 + " <h1>Ihre Artikel:</h1>"
-                + listOfItems
-                + "<input type=\"button\" value=\"Aktualisieren\" onClick=\"location.href=location.href\">"
                 + "<form action=\"\" method=\"get\">"
-                + "<input type=\"hidden\" value=\"receipt\" name=\"request\">"
-                + "<input type=\"submit\" value=\"Letzte Bestellung anzeigen\" formtarget=\"_blank\">"
+                + listOfItems
+                + "<input type=\"submit\" value=\"Aktualisieren\" name=\"refresh\">"
+                + "<input type=\"hidden\" value=\"\" name=\"request\">"
+                + "<input type=\"submit\" name=\"invoice\" value=\"Rechnung anzeigen\" formtarget=\"_blank\">"
                 + "  </body>\n"
                 + "</html>";
 

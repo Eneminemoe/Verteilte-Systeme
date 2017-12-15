@@ -5,8 +5,9 @@
  */
 package store;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.text.DecimalFormat;
+
+
 
 /**
  *
@@ -36,8 +37,9 @@ public class Invoice {
     private int int_butter = 0;
     private int int_chocolate = 0;
 
+    DecimalFormat f = new DecimalFormat("0.00"); // 2 Nachkommastellen
     public void setOrder(int num, String type) {
-
+        
         int_sum+=num;
         switch (type) {
 
@@ -73,6 +75,7 @@ public class Invoice {
                 +Sausage +" * "+int_sausage+" Stck.\n"
                 +Butter +" * "+int_butter+" Stck.\n"
                 +Chocolate +" * "+int_chocolate+" Stck.\n\n"
-                +"Summe:" + int_sum +" EURO";
+                +"Summe:" + f.format(sum) +" EURO\n"
+                +"Summe bestellter Artikel: "+int_sum;
     }
 }

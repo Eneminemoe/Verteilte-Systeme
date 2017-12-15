@@ -19,7 +19,7 @@ import java.util.logging.Logger;
  * //HTML Part nicht elegant, muss vielleicht geändert werden, um zukünftigen
  * Anforderungen zu genügen
  */
-public class TCPHandling extends Thread {
+public class TCPHandling extends Server {
 
     static Socket connection;
     static DataOutputStream outToClient = null;
@@ -32,7 +32,7 @@ public class TCPHandling extends Thread {
     public TCPHandling(Socket incomingConnection) {
 
         connection = incomingConnection;
-
+        
         try {
             inFromClient = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             outToClient = new DataOutputStream(connection.getOutputStream());
@@ -46,19 +46,30 @@ public class TCPHandling extends Thread {
     public void run() {
 
         String message = receiveMessageTCP();
-        System.out.println(message);
-        
-        if(message.contains("request"))System.out.println("Button gedrückt");
-        
+                
         if (message.contains("GET")
                 && (message.contains("HTTP") || message.contains("HTTPS"))
                 && message.contains("index.html")) {
 
             sendMessageTCP(HTTPANSWER);
             
-            if(message.contains("request=receipt")){
-            //Rechnung schicken
-            }else{
+            if(message.contains("request")&& message.contains("invoice")){
+                sendMessageTCP(ThriftHandler.establishThriftConnection("","0", 2));
+            }else if(message.contains("refresh=Aktualisieren")){
+                    sendFileTCP("index.html");
+            }
+            
+            else if(message.contains("=nachbestellen")){
+            
+                System.out.println(message);
+                message = message.substring(message.indexOf("?")+1,message.indexOf("="));
+                //ITEMS TO BE CHANGED
+               String answer = ThriftHandler.establishThriftConnection(message,"5", 1);
+                
+                sendFileTCP("index.html");
+            }
+            
+            else{
                 //sonst normale index.html
                 sendFileTCP("index.html");}
             

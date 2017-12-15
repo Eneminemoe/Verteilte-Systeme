@@ -9,12 +9,6 @@ import java.io.*;
 import java.net.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.thrift.TException;
-import org.apache.thrift.protocol.TBinaryProtocol;
-import org.apache.thrift.protocol.TProtocol;
-import org.apache.thrift.transport.TSocket;
-import org.apache.thrift.transport.TTransport;
-import p3.StoreService;
 
 /**
  *
@@ -24,7 +18,7 @@ import p3.StoreService;
  * behandelt und TCP im Thread tcp
  *
  */
-public class Server extends Thread {
+public class Server extends Thread  {
 
     final static int PAYLOAD = 1024;
     final static int UDP_SERVER_PORT = 6542;
@@ -36,9 +30,10 @@ public class Server extends Thread {
     final static int THRIFTPORT = 9090;
     static DatagramSocket datagramSocket; //UDP
     static ServerSocket welcomeSocket; //TCP-LISTENING
-    static Server tcp;
-    private static Items items; //beinhaltet den aktuellen Stand der Artikel
+    protected static Server tcp;
+    protected static volatile Items items; //beinhaltet den aktuellen Stand der Artikel
     private static HTMLMaker htmlmaker;
+
 
     /**
      * @param args the command line arguments
@@ -128,38 +123,6 @@ public class Server extends Thread {
     }
 
     /**
-     * Bestellt Items über die Schnittstelle
-     */
-    private static String orderItem(StoreService.Client client, String item) throws TException {
-
-        return client.order(ORDER + item);
-    }
-
-    /**
-     * Baut Verbinung zum Store auf via THRIFT Schnittstelle
-     */
-    private static String establishThriftConnection(String item) {
-
-        String answer = "no answer received";
-        try {
-            TTransport transport;
-
-            transport = new TSocket(HOST, THRIFTPORT);
-            transport.open();
-
-            TProtocol protocol = new TBinaryProtocol(transport);
-            StoreService.Client client = new StoreService.Client(protocol);
-
-            answer = orderItem(client, item);
-
-            transport.close();
-        } catch (TException x) {
-            System.out.println("server.Server.establishThriftConnection()" + "  " + x);
-        }
-        return answer;
-    }
-
-    /**
      * Kontrolliert ob Item genommen oder hinzugefügt wurde und verarbeitet
      * UDP-Nachrichten
      */
@@ -174,20 +137,18 @@ public class Server extends Thread {
             s = s.toLowerCase();
             if (items.takeItemOut(items.ItemToAlter(s)) < 3) { // Wenn weniger als 2 eines Artikels vorhanden, nachbestellen
                 //in THREAD auslagern?
-                items.changeItems(establishThriftConnection(s)); 
-            }
-            htmlmaker.setItems(items.getCurrentItemsArray());
-            //System.out.println(items.getCurrentItemsArray()[0]);
+                items.changeItems(ThriftHandler.establishThriftConnection(s,ThriftHandler.ORDERITEMS,1));
+                }
 
         } else if (s.startsWith("+")) {
             s = s.substring(1);
             s = s.toLowerCase();
             items.putItemIn(items.ItemToAlter(s));
-            htmlmaker.setItems(items.getCurrentItemsArray());
-            //System.out.println(items.getCurrentItemsArray()[0]);
+            
         } else {
             System.out.println("Wrong Message");
         }
+        htmlmaker.setItems(items.getCurrentItemsArray());
     }
 
     /**
