@@ -27,12 +27,13 @@ public class TCPHandling extends Server {
     static FileInputStream fis = null;
     static BufferedInputStream bis = null;
     final static String HTTPANSWER = "HTTP/1.1 200 OK\nContent-Type: text/html\n\n";
+    final String FAVICON = "favicon.ico";
     File htmlfile;
 
     public TCPHandling(Socket incomingConnection) {
 
         connection = incomingConnection;
-        
+
         try {
             inFromClient = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             outToClient = new DataOutputStream(connection.getOutputStream());
@@ -46,33 +47,36 @@ public class TCPHandling extends Server {
     public void run() {
 
         String message = receiveMessageTCP();
-                
-        if (message.contains("GET")
+
+        if (message.contains(FAVICON)) {
+        } //favicon requests ignore
+        else if (message.contains("GET")
                 && (message.contains("HTTP") || message.contains("HTTPS"))
                 && message.contains("index.html")) {
 
             sendMessageTCP(HTTPANSWER);
-            
-            if(message.contains("request")&& message.contains("invoice")){
-                sendMessageTCP(ThriftHandler.establishThriftConnection("","0", 2));
-            }else if(message.contains("refresh=Aktualisieren")){
-                    sendFileTCP("index.html");
-            }
-            
-            else if(message.contains("=nachbestellen")){
-            
+
+            if (message.contains("request") && message.contains("invoice")) {
+                sendMessageTCP(ThriftHandler.establishThriftConnection("", "0", 2));
+            } else if (message.contains("refresh=Aktualisieren")) {
+                sendFileTCP("index.html");
+            } else if (message.contains("=nachbestellen")) {
+
                 System.out.println(message);
-                message = message.substring(message.indexOf("?")+1,message.indexOf("="));
+                int begin = message.indexOf("?") + 1;
+                int end = message.indexOf("=");
+                System.out.println(begin + " " + end);
+                message = message.substring(message.indexOf("?") + 1, message.indexOf("="));
+                System.out.println(message);
                 //ITEMS TO BE CHANGED
-               String answer = ThriftHandler.establishThriftConnection(message,"5", 1);
-                
+                //String answer = ThriftHandler.establishThriftConnection(message, "5", 1);
+                Server.orderItems(message);
+                sendFileTCP("index.html");
+            } else {
+                //sonst normale index.html
                 sendFileTCP("index.html");
             }
-            
-            else{
-                //sonst normale index.html
-                sendFileTCP("index.html");}
-            
+
         }
         try {
             fis.close();

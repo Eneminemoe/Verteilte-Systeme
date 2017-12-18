@@ -58,7 +58,7 @@ public class Server extends Thread  {
         while (true) {
 
             String incomingMessage = receiveMessageUDP(); //receiveMessageUDP blockiert, bis Nachricht eintrifft
-            handleMessage(incomingMessage, getItems());
+            handleMessage(incomingMessage);
         }
     }
 
@@ -125,30 +125,31 @@ public class Server extends Thread  {
     /**
      * Kontrolliert ob Item genommen oder hinzugefügt wurde und verarbeitet
      * UDP-Nachrichten
+     * 
      */
-    private static void handleMessage(String s, Items items) {
+    private static void handleMessage(String s) {
 
         s = s.trim(); //Comparison fails in ItemToAlter if not trimmed
-
-        if (s.equals("updateItems")) {
-            sendMessageUDP(items.currentItems());
+        s = s.toLowerCase();
+        if (s.equals("updateitems")) {
+            sendMessageUDP(Server.items.currentItems());
+            
         } else if (s.startsWith("-")) {
             s = s.substring(1);
-            s = s.toLowerCase();
-            if (items.takeItemOut(items.ItemToAlter(s)) < 3) { // Wenn weniger als 2 eines Artikels vorhanden, nachbestellen
+            
+            if (Server.items.takeItemOut(Server.items.ItemToAlter(s)) < 3) { // Wenn weniger als 2 eines Artikels vorhanden, nachbestellen
                 //in THREAD auslagern?
-                items.changeItems(ThriftHandler.establishThriftConnection(s,ThriftHandler.ORDERITEMS,1));
+                orderItems(s);
                 }
 
         } else if (s.startsWith("+")) {
             s = s.substring(1);
-            s = s.toLowerCase();
-            items.putItemIn(items.ItemToAlter(s));
+            Server.items.putItemIn(Server.items.ItemToAlter(s));
             
         } else {
             System.out.println("Wrong Message");
         }
-        htmlmaker.setItems(items.getCurrentItemsArray());
+        htmlmaker.setItems(Server.items.getCurrentItemsArray());
     }
 
     /**
@@ -158,6 +159,13 @@ public class Server extends Thread  {
         return items;
     }
 
+    public static void orderItems(String i){
+      
+    items.changeItems(ThriftHandler.establishThriftConnection(i,ThriftHandler.ORDERITEMS,1));
+     htmlmaker.setItems(Server.items.getCurrentItemsArray());
+    }
+    
+    
     /**
      * @param int test
      *

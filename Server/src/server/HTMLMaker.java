@@ -25,7 +25,12 @@ public class HTMLMaker {
      */
     public final void setItems(String[] items) {
         this.items = items;
-        makeFile();
+        
+        if(makeFile()){
+            System.out.println("HTMLMAKER: File created");
+        }else{
+            System.out.println("File not created!");
+        }
     }
 
     private boolean makeFile() {
@@ -35,7 +40,7 @@ public class HTMLMaker {
 
         for (String s : items) {
             listOfItems += "<li>" + s + "<input type=\"submit\" value=\"nachbestellen\" name =\"";
-            s=s.replaceAll("[^A-Za-z]", "");
+            s = s.replaceAll("[^A-Za-z]", "");
             listOfItems += s;
             listOfItems += "\" onClick=\"return buttonClick(this)\">" + "</li>";
             // listOfItmes = listofItems + "<li>" + s + "</li>";
@@ -47,7 +52,7 @@ public class HTMLMaker {
                 + "  <head>\n"
                 + "    <meta charset=\"utf-8\">\n"
                 + "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n"
-               // + "     <meta http-equiv=\"refresh\" content=\"2\" />\n"
+                // + "     <meta http-equiv=\"refresh\" content=\"2\" />\n"
                 + "    <title>Kühlschrank</title>\n"
                 + "         <script>function buttonClick(theButton){\n"
                 + "             document.getElementById('clicked_button').value = theButton.name;\n"
@@ -74,10 +79,11 @@ public class HTMLMaker {
         } finally {
             try {
                 writer.close();
-            } catch (Exception ex) {/*ignore*/
+            } catch (IOException ex) {/*ignore*/
             }
-            return true;
+
         }
+        return true;
 
     }
 

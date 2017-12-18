@@ -134,6 +134,12 @@ public class Items {
         return chocolate;
     }
 
+    /**
+     * Nachricht: xitem
+     * Funktion parst den String in int Anzahl und string item
+     * und ändert dementspredhend den Wert eines Artikels
+     * @param s xitem
+     */
     public void changeItems(String s) {
         if (s.equals("")) {
             return;

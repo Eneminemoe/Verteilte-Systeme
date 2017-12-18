@@ -42,8 +42,11 @@ public class ThriftHandler {
      * Baut Verbinung zum Store auf via THRIFT Schnittstelle
      *
      * @param item Item, das bestellt werden soll 
+     * @param number Anzahl der zu bestellenden Artikel
      * @param type 1: Bestellung, 2: Rechnung anfordern
-     * @return depending on chosen type
+     * @return depending on chosen type 
+     * type 1: xitem x=Anzahl der gelieferten Artikel item: Artikeltyp
+     * type 2: Rechung der bestellten Artikel
      */
     public static String establishThriftConnection(String item,String number, int type) {
 
