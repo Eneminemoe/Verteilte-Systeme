@@ -31,6 +31,7 @@ public class Items {
     }
 
     /**
+     * @param item Name of Item which is to be changed
      * @return Vector gibt den zu ändernden Artikel zurück
      */
     public Vector ItemToAlter(String item) {
@@ -53,6 +54,7 @@ public class Items {
     /**
      * @param vec zu ändernder Artikel Nimmt Artikel aus dem Kühlschrank und
      * speichert die neue Anzahl
+     * @return gibt aktualisierte Anzahl des Items im Kühlschrank zurück
      */
     public int takeItemOut(Vector vec) {
         int x = (int) vec.lastElement();

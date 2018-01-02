@@ -14,7 +14,7 @@ import org.apache.thrift.transport.*;
  *
  * @author Jens
  */
-public class Store implements StoreService.Iface {
+public class Store implements StoreService.Iface{
 
     public static Store store;
     public static StoreService.Processor processor;
@@ -30,12 +30,19 @@ public class Store implements StoreService.Iface {
             invoice = new Invoice();
             processor = new StoreService.Processor(store);
 
+            //MQTT
+            CliProcessor.getInstance().parseCliOptions(args);
+            Subscriber subscriber = new Subscriber();
+            subscriber.run();
+            
+            
             simpleServer(processor);
+            
+            
         } catch (Exception e) {
         }
     }
-
-    
+ 
     /**
      * 
      * @param message Anzahl und Typ Artikel in Form von xitem
@@ -114,5 +121,6 @@ public class Store implements StoreService.Iface {
         } catch (TTransportException e) {
         }
     }
+
 
 }
