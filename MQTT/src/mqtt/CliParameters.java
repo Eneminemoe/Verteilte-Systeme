@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package producer;
+package mqtt;
 
 import java.util.List;
 

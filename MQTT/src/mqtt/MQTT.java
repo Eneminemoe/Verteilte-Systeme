@@ -3,29 +3,19 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package producer;
-
-import mqtt.Publisher;
-import mqtt.CliProcessor;
+package mqtt;
 
 /**
  *
  * @author Jens
- * 
- * Lieferant der Produkte  
  */
-public class Producer {
+public class MQTT {
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-         // Parse the command line.
-        CliProcessor.getInstance().parseCliOptions(args);
-
-        // Start the MQTT subscriber.
-        Publisher publisher = new Publisher();
-        publisher.run();
+        // TODO code application logic here
     }
     
 }
