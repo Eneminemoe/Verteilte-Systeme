@@ -1,12 +1,12 @@
-package store;
+package producer;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 import mqtt.CliParameters;
-import mqtt.MessageParser;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.slf4j.Logger;
@@ -31,20 +31,13 @@ public class Subscriber {
      * The broker URL.
      */
     private String broker;
-    /**
-     * The MessageParser
-     */
-    private MessageParser messageParser;
 
     /**
      * Default constructor that initializes various class attributes.
-     *
      * @param topic
      */
     public Subscriber(String topic) {
 
-        // Get the Parser
-        messageParser = MessageParser.getInstance();
         // Get the CLI parameters.
         cliParameters = CliParameters.getInstance();
         cliParameters.setTopic(topic);

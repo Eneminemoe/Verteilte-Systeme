@@ -33,12 +33,15 @@ public class CliParameters {
     /**
      * The topic the MQTT client subscribes to.
      */
-    private String topic = "dies-ist-mein-test";
+    private String topic = Constants.TOPIC_MARKETPLACE;
     /**
      * The message that is published.
      */
     private String message = "Hello World";
-
+    /**
+     * The producer
+     */
+    private String producer="";
     /**
      * The static getter for the CLI parameters instance.
      *
@@ -106,5 +109,19 @@ public class CliParameters {
      * A private constructor to avoid instantiation.
      */
     private CliParameters() {
+    }
+
+    /**
+     * @return the producer
+     */
+    public String getProducer() {
+        return producer;
+    }
+
+    /**
+     * @param producer the producer to set
+     */
+    public void setProducer(String producer) {
+        this.producer = producer;
     }
 }

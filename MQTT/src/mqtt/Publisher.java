@@ -5,8 +5,6 @@
  */
 package mqtt;
 
-import mqtt.CliParameters;
-import mqtt.Constants;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -31,12 +29,17 @@ public class Publisher {
     /**
      * Default constructor that initializes
      * various class attributes.
+     * @param topic
+     * @param message
      */
-    public Publisher() {
+    public Publisher(String topic,String message) {
 
         // Get the CLI parameters.
         cliParameters = CliParameters.getInstance();
-
+        //update cliParameters 
+        cliParameters.setTopic(topic);
+        cliParameters.setMessage(message);
+        
         // Create the broker string from command line arguments.
         broker =
                 cliParameters.getBrokerProtocol() + "://" +
@@ -76,7 +79,7 @@ public class Publisher {
             LOGGER.info("Disconnected from MQTT broker.");
 
             // Exit the app explicitly.
-            System.exit(Constants.EXIT_CODE_SUCCESS);
+            //System.exit(Constants.EXIT_CODE_SUCCESS);
 
         } catch (MqttException e) {
             LOGGER.error("An error occurred: " + e.getMessage());

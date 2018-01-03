@@ -1,4 +1,4 @@
-package store;
+package producer;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -6,8 +6,7 @@ package store;
  * and open the template in the editor.
  */
 
-import mqtt.Constants;
-import mqtt.MessageParser;
+
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -32,10 +31,6 @@ public class SimpleMqttCallback implements MqttCallback {
     @Override
     public void messageArrived(String s, MqttMessage mqttMessage) throws Exception {
         LOGGER.info("Message received: "+ new String(mqttMessage.getPayload()) );
-        //Nachricht verarbeiten
-        MessageParser.getInstance().parseMessage(Constants.messagetype.OFFER
-                , new String(mqttMessage.getPayload()));
-        
     }
 
     @Override

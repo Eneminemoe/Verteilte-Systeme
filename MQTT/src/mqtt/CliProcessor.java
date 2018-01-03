@@ -63,6 +63,9 @@ public class CliProcessor {
             if (line.hasOption("t")) {
                 this.cliParameters.setTopic(line.getOptionValue('t'));
             }
+            if (line.hasOption("x")) {
+                this.cliParameters.setProducer(line.getOptionValue('x'));
+            }
             // Get whatever ist left, after the options have been processed.
             if (line.getArgList() == null || line.getArgList().isEmpty()) {
                 LOGGER.info("No message given; using the default message.");
@@ -120,6 +123,13 @@ public class CliProcessor {
                 .hasArg()
                 .argName("TOPIC")
                 .build();
+        // The producer option.
+        Option producer = Option.builder("x")
+                .longOpt("Producer")
+                .desc("The Name of the Producer.")
+                .hasArg()
+                .argName("PRODUCER")
+                .build();
 
         // Create and add options.
         Options options = new Options();
@@ -128,6 +138,7 @@ public class CliProcessor {
         options.addOption(port);
         options.addOption(protocol);
         options.addOption(topic);
+        options.addOption(producer);
 
         // Return options.
         return options;

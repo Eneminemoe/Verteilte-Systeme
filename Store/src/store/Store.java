@@ -9,6 +9,8 @@ import p3.StoreService;
 import org.apache.thrift.TException;
 import org.apache.thrift.server.*;
 import org.apache.thrift.transport.*;
+import mqtt.CliProcessor;
+import mqtt.Constants;
 
 /**
  *
@@ -32,7 +34,7 @@ public class Store implements StoreService.Iface{
 
             //MQTT
             CliProcessor.getInstance().parseCliOptions(args);
-            Subscriber subscriber = new Subscriber();
+            Subscriber subscriber = new Subscriber(Constants.TOPIC_MARKETPLACE);
             subscriber.run();
             
             
