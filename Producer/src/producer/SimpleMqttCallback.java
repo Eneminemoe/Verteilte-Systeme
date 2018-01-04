@@ -5,8 +5,10 @@ package producer;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
-
+import mqtt.CliParameters;
+import mqtt.Constants;
+import mqtt.MessageParser;
+import mqtt.Publisher;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -20,8 +22,11 @@ import org.slf4j.LoggerFactory;
  */
 public class SimpleMqttCallback implements MqttCallback {
 
-    /** The logger. */
+    /**
+     * The logger.
+     */
     private static final Logger LOGGER = LoggerFactory.getLogger(SimpleMqttCallback.class);
+    private static final MessageParser MESSAGEPARSER = MessageParser.getInstance();
 
     @Override
     public void connectionLost(Throwable throwable) {
@@ -30,15 +35,31 @@ public class SimpleMqttCallback implements MqttCallback {
 
     @Override
     public void messageArrived(String s, MqttMessage mqttMessage) throws Exception {
-        LOGGER.info("Message received: "+ new String(mqttMessage.getPayload()) );
+        MESSAGEPARSER.parseMessage(new String(mqttMessage.getPayload()));
+        switch (MESSAGEPARSER.getMessagetype()) {
+            case ORDER:
+                sendAnswerToOrder(
+                        CliParameters.getInstance().getProducer()+Constants.TOPIC_CONFIRMATION
+                        ,MESSAGEPARSER.getConfirmation_message());
+                break;
+            default:
+
+        }
     }
 
     @Override
     public void deliveryComplete(IMqttDeliveryToken mqttDeliveryToken) {
         try {
-            LOGGER.info("Delivery completed: "+ mqttDeliveryToken.getMessage() );
+            LOGGER.info("Delivery completed: " + mqttDeliveryToken.getMessage());
         } catch (MqttException e) {
             LOGGER.error("Failed to get delivery token message: " + e.getMessage());
         }
+    }
+
+    private void sendAnswerToOrder(String topic, String messageToSend) {
+
+        // Start the MQTT Publisher.
+        Publisher publisher = new Publisher(topic, messageToSend);
+        publisher.run();
     }
 }

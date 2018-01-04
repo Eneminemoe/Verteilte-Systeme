@@ -28,6 +28,7 @@ public class ThriftHandler {
      * Bestellbare Items: "milk" , "yoghurt"
                          "sausage" , "butter"
                         "chocolate"
+     * @return  
      */
     private static String orderItem(StoreService.Client client, String item, String number) throws TException {
 

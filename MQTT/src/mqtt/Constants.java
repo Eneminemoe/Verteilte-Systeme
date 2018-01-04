@@ -23,8 +23,10 @@ public class Constants {
     public static final int QOS_EXACTLY_ONCE = 2;
     /** The Market every Producer subscribes to:*/
     public static final String TOPIC_MARKETPLACE= "MARKET";
-    /** The RECEIVE_BROKER for Producers*/
-    public static final String RECEIVE_ORDER = "_RECEIVED_ORDER";
+    /** The RECEIVE_BROKER for Producers to be expanded by Producername*/
+    public static final String TOPIC_RECEIVE_ORDER = "_RECEIVED_ORDER";
+    /** THE CONFIRMATION_BROKER for PRODUCERS and Store. to be expanded by Producername*/
+    public static final String TOPIC_CONFIRMATION = "_CONFIRAMTION";
     /** Time to deliver a new Offer in milliseconds*/
     public static final int PERIDOIC_UPDATE = 20000;
     /** The type of message for the Parser*/

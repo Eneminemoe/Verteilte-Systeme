@@ -16,7 +16,7 @@ import mqtt.Constants;
  *
  * @author Jens
  */
-public class Store implements StoreService.Iface{
+public class Store implements StoreService.Iface {
 
     public static Store store;
     public static StoreService.Processor processor;
@@ -36,51 +36,89 @@ public class Store implements StoreService.Iface{
             CliProcessor.getInstance().parseCliOptions(args);
             Subscriber subscriber = new Subscriber(Constants.TOPIC_MARKETPLACE);
             subscriber.run();
-            
-            
+
             simpleServer(processor);
-            
-            
+
         } catch (Exception e) {
         }
     }
- 
+
     /**
-     * 
+     *
      * @param message Anzahl und Typ Artikel in Form von xitem
-     * @return String, 
+     * @return String,
      * @throws TException
      */
     @Override
     public String order(String message) throws TException {
 
-        
+        boolean inStock = false; // Wenn Artikel nicht vorhanden, keinen versenden
         message = message.toLowerCase();
         if (Character.isDigit(message.charAt(0))) {
             int tmp = Character.getNumericValue(message.charAt(0));
             message = message.trim();
             message = message.replaceAll("[^a-z]", "");
-            
-            System.out.println("Bestellung eingegangen: "+tmp+" "+message);
-            
+
+            System.out.println("Bestellung eingegangen: " + tmp + " " + message);
+
             switch (message) {
-                
+
                 case "milk":
+                    if (Stock.getInstance().getMilk() < tmp) {
+                        inStock = false;
+                        break;
+                    }
+                    inStock = true;
+                    Stock.getInstance().setMilk(-tmp);
+                    break;
                 case "yoghurt":
+                    if (Stock.getInstance().getYoghurt()< tmp) {
+                        inStock = false;
+                        break;
+                    }
+                    inStock=true;
+                    Stock.getInstance().setYoghurt(-tmp);
+                    break;
                 case "sausage":
+                    if (Stock.getInstance().getSausage()< tmp) {
+                        inStock = false;
+                        break;
+                    }
+                    inStock = true;
+                    Stock.getInstance().setSausage(-tmp);
+                    break;
                 case "butter":
+                    if (Stock.getInstance().getButter()< tmp) {
+                        inStock = false;
+                        break;
+                    }
+                    inStock = true;
+                    Stock.getInstance().setButter(-tmp);
+                    break;
                 case "chocolate":
-                    makeInvoice(message, tmp);
-                    
-                    System.out.println("Bestellung versendet: "+tmp+" "+message);
-                    
-                    return tmp + " " + message + " bestellt.";
-                
+                    if (Stock.getInstance().getChocolate()< tmp) {
+                        inStock = false;
+                        break;
+                    }
+                    inStock = true;
+                    Stock.getInstance().setChocolate(-tmp);
+                    break;
                 default:
-                    System.out.println("Artikel nicht vorhanden: "+message);
+                    System.out.println("Artikel nicht vorhanden: " + message);
                     return "Gesendete Nachricht: " + message + " Artikel nicht vorhanden";
             }
 
+            if(inStock){
+            makeInvoice(message, tmp);
+            System.out.println("Bestellung versendet: " + tmp + " " + message);
+
+            return tmp + " " + message + " bestellt.";
+            }else{
+                //Bestellung nicht verabeitbar, weil nicht vorrätig
+                System.out.println("Artikel derzeit nicht vorhanden. Kann nicht versendet werden");
+            return "Artikel derzeit nicht vorhanden.";
+            }
+                 
         } else {
             System.out.println("Nachricht konnte nicht verarbeitet werden.");
             System.out.println("Gesendete Nachricht:");
@@ -91,20 +129,21 @@ public class Store implements StoreService.Iface{
     }
 
     /**
-     * 
+     *
      * @param message Fehler in THRIFT, message nicht benötigt
      * @return String mit Rechnung
      * @throws TException
      */
     @Override
     public String invoice(String message) throws TException {
-        
+
         System.out.println("Rechnung angefordert.");
         return invoice.getOrder();
     }
 
     /**
      * Rechnung erstellen
+     *
      * @param order bestellter Artikel
      * @param number Anzahl des Artikels
      */
@@ -123,6 +162,5 @@ public class Store implements StoreService.Iface{
         } catch (TTransportException e) {
         }
     }
-
 
 }

@@ -59,17 +59,13 @@ public class TCPHandling extends Server {
             if (message.contains("request") && message.contains("invoice")) {
                 sendMessageTCP(ThriftHandler.establishThriftConnection("", "0", 2));
             } else if (message.contains("refresh=Aktualisieren")) {
+                htmlmaker.setItems(Server.items.getCurrentItemsArray());
                 sendFileTCP("index.html");
             } else if (message.contains("=nachbestellen")) {
 
-                System.out.println(message);
-                int begin = message.indexOf("?") + 1;
-                int end = message.indexOf("=");
-                System.out.println(begin + " " + end);
+                //System.out.println(message);
                 message = message.substring(message.indexOf("?") + 1, message.indexOf("="));
                 System.out.println(message);
-                //ITEMS TO BE CHANGED
-                //String answer = ThriftHandler.establishThriftConnection(message, "5", 1);
                 Server.orderItems(message);
                 sendFileTCP("index.html");
             } else {

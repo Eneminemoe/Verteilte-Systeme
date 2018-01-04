@@ -9,6 +9,7 @@ import java.io.*;
 import java.net.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -18,7 +19,7 @@ import java.util.logging.Logger;
  * behandelt und TCP im Thread tcp
  *
  */
-public class Server extends Thread  {
+public class Server extends Thread {
 
     final static int PAYLOAD = 1024;
     final static int UDP_SERVER_PORT = 6542;
@@ -32,8 +33,8 @@ public class Server extends Thread  {
     static ServerSocket welcomeSocket; //TCP-LISTENING
     protected static Server tcp;
     protected static volatile Items items; //beinhaltet den aktuellen Stand der Artikel
-    private static HTMLMaker htmlmaker;
-
+    public static HTMLMaker htmlmaker;
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(Server.class);
 
     /**
      * @param args the command line arguments
@@ -67,7 +68,6 @@ public class Server extends Thread  {
      */
     @Override
     public void run() {
-
 
         while (true) {
 
@@ -123,9 +123,9 @@ public class Server extends Thread  {
     }
 
     /**
-     * Kontrolliert ob Item genommen oder hinzugefügt wurde und verarbeitet
-     * UDP-Nachrichten
-     * 
+     * Kontrolliert ob Item aus dem Kühlschrank genommen oder hinzugefügt wurde
+     * und verarbeitet UDP-Nachrichten
+     *
      */
     private static void handleMessage(String s) {
 
@@ -133,23 +133,22 @@ public class Server extends Thread  {
         s = s.toLowerCase();
         if (s.equals("updateitems")) {
             sendMessageUDP(Server.items.currentItems());
-            
+
         } else if (s.startsWith("-")) {
             s = s.substring(1);
-            
+
             if (Server.items.takeItemOut(Server.items.ItemToAlter(s)) < 3) { // Wenn weniger als 2 eines Artikels vorhanden, nachbestellen
                 //in THREAD auslagern?
                 orderItems(s);
-                }
+            }
 
         } else if (s.startsWith("+")) {
             s = s.substring(1);
             Server.items.putItemIn(Server.items.ItemToAlter(s));
-            
+
         } else {
             System.out.println("Wrong Message");
         }
-        htmlmaker.setItems(Server.items.getCurrentItemsArray());
     }
 
     /**
@@ -159,13 +158,16 @@ public class Server extends Thread  {
         return items;
     }
 
-    public static void orderItems(String i){
-      
-    items.changeItems(ThriftHandler.establishThriftConnection(i,ThriftHandler.ORDERITEMS,1));
-     htmlmaker.setItems(Server.items.getCurrentItemsArray());
+    public static void orderItems(String i) {
+        String answer = ThriftHandler.establishThriftConnection(i, ThriftHandler.ORDERITEMS, 1);
+        
+        if (answer.contains("lieferbar")) {
+            LOGGER.info(answer);
+        } else {
+            items.changeItems(answer);
+        }
     }
-    
-    
+
     /**
      * @param int test
      *

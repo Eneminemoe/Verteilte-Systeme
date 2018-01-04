@@ -41,7 +41,7 @@ public class CliParameters {
     /**
      * The producer
      */
-    private String producer="";
+    private String producer="defaultProducer";
     /**
      * The static getter for the CLI parameters instance.
      *
