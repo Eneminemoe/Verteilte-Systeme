@@ -20,8 +20,8 @@ public class ThriftHandler {
 
     //THRIFT CONSTANTS
     final static String ORDERITEMS = "9";
-    final static String HOST = "localhost";
-    final static int THRIFTPORT = 9090;
+
+
 
     /**
      * Bestellt Items über die Schnittstelle
@@ -55,7 +55,7 @@ public class ThriftHandler {
         try {
             TTransport transport;
 
-            transport = new TSocket(HOST, THRIFTPORT);
+            transport = new TSocket(constants.Constants.THRIFT_HOST, constants.Constants.THRIFTPORT);
             transport.open();
 
             TProtocol protocol = new TBinaryProtocol(transport);
@@ -63,7 +63,9 @@ public class ThriftHandler {
 
             switch (type) {
                 case 1:
+                    System.out.println(ThriftHandler.class+", Item: " +item);
                     answer = orderItem(client, item, number);
+                    System.out.println(ThriftHandler.class+", Answer: "+ answer);
                     break;
                 case 2:
                     answer = getInvoice(client,item);

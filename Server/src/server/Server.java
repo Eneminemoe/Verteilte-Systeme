@@ -21,14 +21,11 @@ import org.slf4j.LoggerFactory;
  */
 public class Server extends Thread {
 
-    final static int PAYLOAD = 1024;
-    final static int UDP_SERVER_PORT = 6542;
-    final static int UDP_CLIENT_PORT = 6543;
-    final static int TCP_LISTENING_SOCKET = 6544;
+
+
     //THRIFT CONSTANTS
     final static String ORDER = "9";
-    final static String HOST = "localhost";
-    final static int THRIFTPORT = 9090;
+    
     static DatagramSocket datagramSocket; //UDP
     static ServerSocket welcomeSocket; //TCP-LISTENING
     protected static Server tcp;
@@ -45,8 +42,8 @@ public class Server extends Thread {
         htmlmaker = new HTMLMaker(items.getCurrentItemsArray());
 
         try {
-            datagramSocket = new DatagramSocket(UDP_SERVER_PORT);
-            welcomeSocket = new ServerSocket(TCP_LISTENING_SOCKET);
+            datagramSocket = new DatagramSocket(constants.Constants.UDP_SERVER_PORT);
+            welcomeSocket = new ServerSocket(constants.Constants.TCP_LISTENING_SERVER_SOCKET);
         } catch (SocketException ex) {
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -88,7 +85,7 @@ public class Server extends Thread {
      */
     private static String receiveMessageUDP() {
 
-        byte[] receivedData = new byte[PAYLOAD];
+        byte[] receivedData = new byte[constants.Constants.PAYLOAD_FOR_UDP];
         DatagramPacket receivedPacket = new DatagramPacket(receivedData, receivedData.length);
         try {
             datagramSocket.receive(receivedPacket); //Daten empfangen
@@ -106,18 +103,14 @@ public class Server extends Thread {
      */
     public static void sendMessageUDP(String message) {
 
-        byte[] sendData = new byte[PAYLOAD];
-        DatagramSocket sendSocket = null;
-        try {
-            sendSocket = new DatagramSocket();
+        byte[] sendData = new byte[constants.Constants.PAYLOAD_FOR_UDP];
+        try (DatagramSocket sendSocket = new DatagramSocket()) {
             InetAddress inetAddress = InetAddress.getByName("localhost");
             sendData = message.getBytes();
-            DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, inetAddress, UDP_CLIENT_PORT);
+            DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, inetAddress, constants.Constants.UDP_CLIENT_PORT);
             sendSocket.send(sendPacket);
 
         } catch (IOException e) {
-        } finally {
-            sendSocket.close();
         }
 
     }
@@ -130,7 +123,6 @@ public class Server extends Thread {
     private static void handleMessage(String s) {
 
         s = s.trim(); //Comparison fails in ItemToAlter if not trimmed
-        s = s.toLowerCase();
         if (s.equals("updateitems")) {
             sendMessageUDP(Server.items.currentItems());
 

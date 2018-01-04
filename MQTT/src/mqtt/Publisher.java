@@ -67,7 +67,7 @@ public class Publisher {
 
             // Create the message and set a quality-of-service parameter.
             MqttMessage message = new MqttMessage(cliParameters.getMessage().getBytes());
-            message.setQos(Constants.QOS_EXACTLY_ONCE);
+            message.setQos(constants.Constants.QOS_EXACTLY_ONCE);
 
             // Publish the message.
             client.publish(cliParameters.getTopic(), message);

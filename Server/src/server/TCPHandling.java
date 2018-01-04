@@ -63,9 +63,8 @@ public class TCPHandling extends Server {
                 sendFileTCP("index.html");
             } else if (message.contains("=nachbestellen")) {
 
-                //System.out.println(message);
                 message = message.substring(message.indexOf("?") + 1, message.indexOf("="));
-                System.out.println(message);
+                System.out.println("Artikel nachbestellen: " + message);
                 Server.orderItems(message);
                 sendFileTCP("index.html");
             } else {

@@ -7,7 +7,6 @@ package producer;
 
 import mqtt.Publisher;
 import mqtt.CliProcessor;
-import mqtt.Constants;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,19 +31,19 @@ public class Producer {
         CliProcessor.getInstance().parseCliOptions(args);
         
         //PRODUCER needs to subscribed to a reiceive_order topic
-         Subscriber subscriber = new Subscriber(CliParameters.getInstance().getProducer()+Constants.TOPIC_RECEIVE_ORDER);
+         Subscriber subscriber = new Subscriber(CliParameters.getInstance().getProducer()+constants.Constants.TOPIC_RECEIVE_ORDER);
          subscriber.run();
         
         while (true) {
 
             generateOffer();
             
-            // Start the MQTT Publisher.
-            Publisher publisher = new Publisher(Constants.TOPIC_MARKETPLACE, messageToSend);
+            // Start the MQTT Publisher and send offer
+            Publisher publisher = new Publisher(constants.Constants.TOPIC_MARKETPLACE, messageToSend);
             publisher.run();
 
             try {
-                Thread.sleep(Constants.PERIDOIC_UPDATE);
+                Thread.sleep(constants.Constants.PERIDOIC_UPDATE);
             } catch (InterruptedException ex) {
                 Logger.getLogger(Producer.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -67,19 +66,19 @@ public class Producer {
         String Artikel = "";
         switch (randomNum) {
             case 0:
-                Artikel = "Milch";
+                Artikel = constants.Constants.MILCH;
                 break;
             case 1:
-                Artikel = "Butter";
+                Artikel = constants.Constants.BUTTER;
                 break;
             case 2:
-                Artikel = "Yoghurt";
+                Artikel = constants.Constants.YOGHURT;
                 break;
             case 3:
-                Artikel = "Wurst";
+                Artikel = constants.Constants.WURST;
                 break;
             case 4:
-                Artikel = "Schokolade";
+                Artikel = constants.Constants.SCHOKOLADE;
                 break;
             default:
 

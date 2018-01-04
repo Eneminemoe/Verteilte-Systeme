@@ -6,7 +6,6 @@ package producer;
  * and open the template in the editor.
  */
 import mqtt.CliParameters;
-import mqtt.Constants;
 import mqtt.MessageParser;
 import mqtt.Publisher;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
@@ -39,7 +38,7 @@ public class SimpleMqttCallback implements MqttCallback {
         switch (MESSAGEPARSER.getMessagetype()) {
             case ORDER:
                 sendAnswerToOrder(
-                        CliParameters.getInstance().getProducer()+Constants.TOPIC_CONFIRMATION
+                        CliParameters.getInstance().getProducer()+constants.Constants.TOPIC_CONFIRMATION
                         ,MESSAGEPARSER.getConfirmation_message());
                 break;
             default:

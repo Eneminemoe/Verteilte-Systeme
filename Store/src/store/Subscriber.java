@@ -31,10 +31,6 @@ public class Subscriber {
      * The broker URL.
      */
     private String broker;
-    /**
-     * The MessageParser
-     */
-    private MessageParser messageParser;
 
     /**
      * Default constructor that initializes various class attributes.
@@ -43,8 +39,6 @@ public class Subscriber {
      */
     public Subscriber(String topic) {
 
-        // Get the Parser
-        messageParser = MessageParser.getInstance();
         // Get the CLI parameters.
         cliParameters = CliParameters.getInstance();
         cliParameters.setTopic(topic);

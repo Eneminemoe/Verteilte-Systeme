@@ -36,15 +36,15 @@ public class Items {
      */
     public Vector ItemToAlter(String item) {
         switch (item) {
-            case "milk":
+            case constants.Constants.MILCH:
                 return getMilk();
-            case "yoghurt":
+            case constants.Constants.YOGHURT:
                 return getYoguhrt();
-            case "sausage":
+            case constants.Constants.WURST:
                 return getSausage();
-            case "butter":
+            case constants.Constants.BUTTER:
                 return getButter();
-            case "chocolate":
+            case constants.Constants.SCHOKOLADE:
                 return getChocolate();
             default:
                 return null;
@@ -82,21 +82,21 @@ public class Items {
      */
     public String currentItems() {
 
-        cI[0] = "Milk: " + getMilk().lastElement();
-        cI[1] = "Yoghurt: " + getYoguhrt().lastElement();
-        cI[2] = "Sausage: " + getSausage().lastElement();
-        cI[3] = "Butter: " + getButter().lastElement();
-        cI[4] = "Chocolate:" + getChocolate().lastElement();
+        cI[0] = constants.Constants.MILCH + ": " + getMilk().lastElement();
+        cI[1] = constants.Constants.YOGHURT + ": " + getYoguhrt().lastElement();
+        cI[2] = constants.Constants.WURST + ": " + getSausage().lastElement();
+        cI[3] = constants.Constants.BUTTER + ": " + getButter().lastElement();
+        cI[4] = constants.Constants.SCHOKOLADE + ":" + getChocolate().lastElement();
         return cI[0] + "\n" + cI[1] + "\n" + cI[2] + "\n" + cI[3] + "\n" + cI[4];
     }
 
     public String[] getCurrentItemsArray() {
 
-        cI[0] = "Milk: " + getMilk().lastElement();
-        cI[1] = "Yoghurt: " + getYoguhrt().lastElement();
-        cI[2] = "Sausage: " + getSausage().lastElement();
-        cI[3] = "Butter: " + getButter().lastElement();
-        cI[4] = "Chocolate:" + getChocolate().lastElement();
+        cI[0] = constants.Constants.MILCH + ": " + getMilk().lastElement();
+        cI[1] = constants.Constants.YOGHURT + ": " + getYoguhrt().lastElement();
+        cI[2] = constants.Constants.WURST + ": " + getSausage().lastElement();
+        cI[3] = constants.Constants.BUTTER + ": " + getButter().lastElement();
+        cI[4] = constants.Constants.SCHOKOLADE + ": " + getChocolate().lastElement();
 
         return cI;
     }
@@ -137,24 +137,29 @@ public class Items {
     }
 
     /**
-     * Nachricht: xitem
-     * Funktion parst den String in int Anzahl und string item
+     * Nachricht: xitem Funktion parst den String in int Anzahl und string item
      * und ändert dementspredhend den Wert eines Artikels
+     *
      * @param s xitem
      */
     public void changeItems(String s) {
-        if (s.equals("")) {
+
+        int tmp = 0; //Anzahl der Artikel
+
+        if (s.equals("")) { //Wenn leere Nachhricht nichts ändern.
             return;
         }
-        s = s.replaceAll("\\s", "");
-        int tmp = Character.getNumericValue(s.charAt(0));
-        s = s.substring(1);
-        s = s.substring(0, s.length() - 9);
-        System.out.println(s);
-        try {
-            ItemToAlter(s).add((int) ItemToAlter(s).lastElement() + tmp);
-        } catch (Exception e) {
-        }
 
+        s = s.replaceAll("\\s", "");
+        if (Character.isDigit(s.charAt(0))) {
+
+            tmp = Character.getNumericValue(s.charAt(0)); //Anzahl holen
+            s = s.substring(1); //Anzahl löschen
+            s = s.substring(0, s.length() - 9); 
+            try {
+                ItemToAlter(s).add((int) ItemToAlter(s).lastElement() + tmp);
+            } catch (Exception e) {
+            }
+        }        
     }
 }

@@ -49,7 +49,7 @@ public class CliProcessor {
 
             if (line.hasOption("h")) {
                 printHelp(options);
-                System.exit(Constants.EXIT_CODE_SUCCESS);
+                System.exit(constants.Constants.EXIT_CODE_SUCCESS);
             }
             if (line.hasOption("b")) {
                 this.cliParameters.setBrokerAddress(line.getOptionValue('b'));
@@ -76,7 +76,7 @@ public class CliProcessor {
         } catch (MissingOptionException | MissingArgumentException e) {
             LOGGER.error("ERROR: " + e.getMessage() + "\n");
             printHelp(options);
-            System.exit(Constants.EXIT_CODE_ERROR);
+            System.exit(constants.Constants.EXIT_CODE_ERROR);
         } catch (ParseException e) {
             // Oops, something went totally wrong.
             LOGGER.error("ERROR: Parsing failed. Reason: " + e.getMessage());

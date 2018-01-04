@@ -10,9 +10,10 @@ package store;
  * @author Jens
  */
 public class Stock {
-    
+
     private static Stock instance;
-    
+    public static final int MAXNUMBEROFEACHITEM = 2000;
+
     //Anzahl lagernder Artikel
     private int sum = 1250;
     private int milk = 250;
@@ -20,16 +21,17 @@ public class Stock {
     private int sausage = 250;
     private int butter = 250;
     private int chocolate = 250;
-    
-        public static Stock getInstance() {
+
+    public static Stock getInstance() {
         if (instance == null) {
             instance = new Stock();
         }
         return instance;
     }
-    
+
     //Prevent Instantiation
-    private Stock(){}
+    private Stock() {
+    }
 
     /**
      * @return the sum
@@ -39,10 +41,10 @@ public class Stock {
     }
 
     /**
-     *Calculate the sum
+     * Calculate the sum
      */
     public void CalculateSum() {
-        this.sum = milk+butter+yoghurt+chocolate+sausage;
+        this.sum = milk + butter + yoghurt + chocolate + sausage;
     }
 
     /**
@@ -113,5 +115,31 @@ public class Stock {
      */
     public void setChocolate(int chocolate) {
         this.chocolate += chocolate;
+    }
+
+    /**
+     * Function to run through all offers and decide to order items if fitting
+     * offer
+     *
+     * @param offers Object Offers with every offer via MQTT
+     */
+    public void checkStockandOrder(Offers offers) {
+
+        
+/*
+        switch (item) {
+
+            case "milk":
+                break;
+            case "yoghurt":
+                break;
+            case "sausage":
+                break;
+            case "butter":
+                break;
+            case "chocolate":
+                break;
+            default:
+        }*/
     }
 }

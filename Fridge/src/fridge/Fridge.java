@@ -5,6 +5,7 @@
  */
 package fridge;
 
+import constants.Constants;
 import java.io.*;
 import java.net.*;
 import java.util.concurrent.TimeUnit;
@@ -16,14 +17,11 @@ import java.util.logging.Logger;
  * @author Jens
  *
  * Simuliert einen Kühlschrank mit Sensoren, der Artikel erfasst.
- * 
- * Artikel die derzeit simuliert werden können:
- * milk, yoghurt, chocolate, butter, sausage
+ *
+ * Artikel die derzeit simuliert werden können: milk, yoghurt, chocolate,
+ * butter, sausage
  */
 public class Fridge {
-
-    final static int PAYLOAD = 1024;
-    final static int UDP_SERVER_PORT = 6542;
 
     /**
      * @param args the command line arguments
@@ -33,31 +31,25 @@ public class Fridge {
         //Hier kann man nun Sensoren simulieren, um Gegenstände rauszunehmen und einzufügen
         while (true) {
 
-
-
-            takeItemOut("milk");
+            takeItemOut(Constants.MILCH);
             waitSeconds(1);
         }
     }
 
     /**
-     * @param message beihnhaltet Nachricht zum verschicken Sendet String per
-     * UDP an den Server
+     * @param message beihnhaltet Nachricht zum verschicken
+     * Sendet String per UDP an den Server
      */
     private static void sendMessage(String message) {
 
-        byte[] sendData = new byte[PAYLOAD];
-        DatagramSocket datagramSocket = null;
-        try {
-            datagramSocket = new DatagramSocket();
+        byte[] sendData = new byte[constants.Constants.PAYLOAD_FOR_UDP];
+        try (DatagramSocket datagramSocket = new DatagramSocket()) {
             InetAddress inetAddress = InetAddress.getByName("localhost");
             sendData = message.getBytes();
-            DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, inetAddress, UDP_SERVER_PORT);
+            DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, inetAddress, constants.Constants.UDP_SERVER_PORT);
             datagramSocket.send(sendPacket);
 
         } catch (IOException e) {
-        } finally {
-            datagramSocket.close();
         }
 
     }
@@ -99,8 +91,8 @@ public class Fridge {
         switch (test) {
             case 1:
                 while (i < 1) {
-                    putItemIn("milk");
-                    takeItemOut("milk");
+                    putItemIn(constants.Constants.MILCH);
+                    takeItemOut(constants.Constants.MILCH);
                 }
                 break;
             case 2:
@@ -109,7 +101,7 @@ public class Fridge {
                  duration;
 
                 startTime = System.nanoTime(); // Zeit messen
-                putItemIn("milk"); // Nachricht versenden 
+                putItemIn(constants.Constants.MILCH); // Nachricht versenden 
                 endTime = System.nanoTime(); // Zeit messen
                 duration = endTime - startTime;
                 System.out.println("Time elapsed: " + duration + " nanoseconds."); //Zeitmessung
@@ -117,7 +109,9 @@ public class Fridge {
                 System.out.println("Time elapsed: " + ((double) duration / 1000000000) + " seconds."); //zeitmessung
                 break;
 
-            default:System.out.println("Test nicht vorhanden");;
+            default:
+                System.out.println("Test nicht vorhanden");
+                ;
         }
     }
 

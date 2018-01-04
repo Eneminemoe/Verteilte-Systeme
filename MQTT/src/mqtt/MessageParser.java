@@ -30,7 +30,7 @@ public class MessageParser {
     private String offer_message;
     private String order_message;
     private String confirmation_message;
-    private Constants.messagetype messagetype;
+    private constants.Constants.messagetype messagetype;
 
     public static MessageParser getInstance() {
         if (instance == null) {
@@ -55,13 +55,13 @@ public class MessageParser {
             words = message.split(":");
             switch (words[0]) {
                 case "OFFER":
-                    this.messagetype = Constants.messagetype.OFFER;
+                    this.messagetype = constants.Constants.messagetype.OFFER;
                     break;
                 case "ORDER":
-                    this.messagetype = Constants.messagetype.ORDER;
+                    this.messagetype = constants.Constants.messagetype.ORDER;
                     break;
                 case "CONFIRMATION":
-                    this.messagetype = Constants.messagetype.CONFIRMATION;
+                    this.messagetype = constants.Constants.messagetype.CONFIRMATION;
                     break;
                 default:
             }
@@ -190,7 +190,7 @@ public class MessageParser {
     /**
      * @return the messagetype
      */
-    public Constants.messagetype getMessagetype() {
+    public constants.Constants.messagetype getMessagetype() {
         return messagetype;
     }
 }

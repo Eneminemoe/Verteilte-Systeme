@@ -5,7 +5,6 @@ package store;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 import mqtt.MessageParser;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
@@ -25,12 +24,19 @@ public class SimpleMqttCallback implements MqttCallback {
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(SimpleMqttCallback.class);
     private static final MessageParser MESSAGEPARSER = MessageParser.getInstance();
+    private static final Offers OFFERS = Offers.getInstance();
 
     @Override
     public void connectionLost(Throwable throwable) {
         LOGGER.error("Connection to MQTT broker lost!");
     }
 
+    /**
+     * Get message via MQTT 
+     * @param s
+     * @param mqttMessage
+     * @throws java.lang.Exception
+     */
     @Override
     public void messageArrived(String s, MqttMessage mqttMessage) throws Exception {
         LOGGER.info("Message received: " + new String(mqttMessage.getPayload()));
@@ -41,7 +47,12 @@ public class SimpleMqttCallback implements MqttCallback {
                 LOGGER.info(MESSAGEPARSER.getConfirmation_message());
                 break;
             case OFFER:
-
+               if(OFFERS.addOffer(new Offer(MESSAGEPARSER.getProducer(),
+                         MESSAGEPARSER.getArtikel(),
+                         MESSAGEPARSER.getPreis(),
+                        MESSAGEPARSER.getAnzahl()))){
+                   System.out.println("Angebot erhalten: "+ MESSAGEPARSER.getOffer_message());
+               }
                 break;
             default:
         }

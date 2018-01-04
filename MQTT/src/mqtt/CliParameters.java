@@ -33,7 +33,7 @@ public class CliParameters {
     /**
      * The topic the MQTT client subscribes to.
      */
-    private String topic = Constants.TOPIC_MARKETPLACE;
+    private String topic = constants.Constants.TOPIC_MARKETPLACE;
     /**
      * The message that is published.
      */
