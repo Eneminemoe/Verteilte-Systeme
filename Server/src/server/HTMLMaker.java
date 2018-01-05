@@ -29,10 +29,13 @@ public class HTMLMaker {
         if(makeFile()){
             System.out.println("HTMLMAKER: File created");
         }else{
-            System.out.println("File not created!");
+            System.out.println("File could not be created!");
         }
     }
 
+    /**
+     * Erstellt eine HTMLFile mit dem aktuellen Kühlschrankinhalt und schreibt diese auf die HDD
+     */
     private boolean makeFile() {
 
         Writer writer = null;
@@ -43,7 +46,6 @@ public class HTMLMaker {
             s = s.replaceAll("[^A-Za-z]", "");
             listOfItems += s;
             listOfItems += "\" onClick=\"return buttonClick(this)\">" + "</li>";
-            // listOfItmes = listofItems + "<li>" + s + "</li>";
         }
         listOfItems += "</ul>";
 

@@ -5,7 +5,6 @@
  */
 package mqtt;
 
-
 /**
  *
  * @author Jens Class to create and read messages made by MQTT
@@ -22,12 +21,13 @@ public class MessageParser {
     private String Artikel;
     private double Preis;
     private int Anzahl;
+    private int ItemsSent;
+    
     /**
-     * Topic to publish to can be:
-     * for Offer: TOPIC_MARKETPLACE
-     * for Order: producer + TOPIC_TOPIC_RECEIVE_ORDER
-     * for Confirmation: store+TOPIC_CONFIRMATION 
-     * 
+     * Topic to publish to can be: for Offer: TOPIC_MARKETPLACE for Order:
+     * producer + TOPIC_RECEIVE_ORDER for Confirmation:
+     * store + TOPIC_CONFIRMATION
+     *
      */
     private String Topic;
     private String offer_message;
@@ -93,8 +93,9 @@ public class MessageParser {
                 Store = words[2]; // intended to start at 1 -> [0] = "OFFER" / "ORDER"
                 Artikel = words[3];
                 p = Double.valueOf(words[4]);
-                Preis= Math.round(p * 100) / 100.0; //2 Nachkommastellen
+                Preis = Math.round(p * 100) / 100.0; //2 Nachkommastellen
                 Anzahl = Integer.valueOf(words[5]);
+                ItemsSent= Integer.valueOf(words[6]);
                 break;
             default:;
         }
@@ -164,7 +165,7 @@ public class MessageParser {
      * @return String "OFFER:producer:artikel:price:number"
      */
     public String makeOffermessage(String producer, String artikel, double price, int number) {
-        Topic=constants.Constants.TOPIC_MARKETPLACE;
+        Topic = constants.Constants.TOPIC_MARKETPLACE;
         return "OFFER:"
                 + producer
                 + ":"
@@ -186,7 +187,7 @@ public class MessageParser {
      * @return String "ORDER:artikel:price:number"
      */
     public String makeOrder_message(String store, String artikel, double price, int number) {
-        Topic=Producer+constants.Constants.TOPIC_RECEIVE_ORDER;
+        Topic = Producer + constants.Constants.TOPIC_RECEIVE_ORDER;
         return "ORDER:"
                 + store
                 + ":"
@@ -206,10 +207,11 @@ public class MessageParser {
      * @param artikel
      * @param price
      * @param number
+     * @param sent
      * @return String "CONFIRMATION:producer:store:artikel:price:number"
      */
-    public String makeConfirmation_message(String producer, String store, String artikel, double price, int number) {
-        Topic=Store+constants.Constants.TOPIC_CONFIRMATION;
+    public String makeConfirmation_message(String producer, String store, String artikel, double price, int number, int sent) {
+        Topic = Store + constants.Constants.TOPIC_CONFIRMATION;
         return "CONFIRMATION:"
                 + producer
                 + ":"
@@ -219,7 +221,9 @@ public class MessageParser {
                 + ":"
                 + Double.toString(price)
                 + ":"
-                + Integer.toString(number);
+                + Integer.toString(number)
+                + ":"
+                + sent;
     }
 
     /**
@@ -241,5 +245,12 @@ public class MessageParser {
      */
     public String getTopic() {
         return Topic;
+    }
+
+    /**
+     * @return the ItemsSent
+     */
+    public int getItemsSent() {
+        return ItemsSent;
     }
 }

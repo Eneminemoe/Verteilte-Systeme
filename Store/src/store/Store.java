@@ -5,6 +5,7 @@
  */
 package store;
 
+import organizeoffers.Offers;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -36,6 +37,8 @@ public class Store extends Thread implements StoreService.Iface {
      */
     public static void main(String[] args) {
         try {
+
+            CliProcessor.getInstance().parseCliOptions(args);
             store = new Store();
             invoice = new Invoice();
             processor = new StoreService.Processor(store);
@@ -43,13 +46,18 @@ public class Store extends Thread implements StoreService.Iface {
             offers = Offers.getInstance();
             subscribedProducers = new ArrayList<>();
 
+            //Zeigt den Store-Namen
+            System.out.println("Store: " + CliParameters.getInstance().getStore());
+
             store.start();
 
             //MQTT
-            CliProcessor.getInstance().parseCliOptions(args);
-            System.out.println("Store: " + CliParameters.getInstance().getStore());
             Subscriber subscriber = new Subscriber(constants.Constants.TOPIC_MARKETPLACE);
             subscriber.run();
+
+            Subscriber subscriberb = new Subscriber(CliParameters.getInstance().getStore()
+                    + constants.Constants.TOPIC_CONFIRMATION);
+            subscriberb.run();
 
             /**
              * THRIFT
@@ -64,21 +72,19 @@ public class Store extends Thread implements StoreService.Iface {
     @Override
     public void run() {
         while (true) {
-            //Artikel nachbestellen
+
             waitSeconds(TIMETOWAIT);
-            checkAndSubscribeToProducers();
-            waitSeconds(2);
-            stock_instance.checkStockandOrder(offers);
+            stock_instance.checkStockandOrder(offers);  //Artikel nachbestellen
             waitSeconds(2);
             offers.showCurrentOffers();
         }
     }
 
     /**
-     * Function processes order and checks Stock
+     * Function processes order between Store and Fridge
      *
      * @param message Anzahl und Typ Artikel in Form von xitem
-     * @return String,
+     * @return String Antwort auf Anfrage
      * @throws TException
      */
     @Override
@@ -201,6 +207,8 @@ public class Store extends Thread implements StoreService.Iface {
 
     /**
      * Time to wait in seconds, cannot be interrupted
+     * 
+     * @param seconds time to wait 
      */
     private static void waitSeconds(int seconds) {
         try {
@@ -211,6 +219,7 @@ public class Store extends Thread implements StoreService.Iface {
     }
 
     /**
+     * @deprecated Nicht notwendig
      * Kontrolliert, ob bei allen Producern auf CONFIRMATION_Topic subscribed
      * Wenn nicht, wird beim jeweiligen subscribed und der Liste hinzugefügt
      */

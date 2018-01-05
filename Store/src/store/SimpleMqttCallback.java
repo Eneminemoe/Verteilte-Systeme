@@ -5,6 +5,8 @@ package store;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+import organizeoffers.Offer;
+import organizeoffers.Offers;
 import mqtt.MessageParser;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
@@ -40,35 +42,45 @@ public class SimpleMqttCallback implements MqttCallback {
      */
     @Override
     public void messageArrived(String s, MqttMessage mqttMessage) throws Exception {
-        //Nachricht verarbeiten
+        
+        //Nachricht verarbeiten: einlesen und speichern
         MESSAGEPARSER.parseMessage(new String(mqttMessage.getPayload()));
+        
         switch (MESSAGEPARSER.getMessagetype()) {
+            
             case CONFIRMATION:
+                //Wenn keine Artikel bekommen
+                if(MESSAGEPARSER.getItemsSent()== constants.Constants.NOITEMSENT){
+                LOGGER.info("Angebot ausverkauft: " + MESSAGEPARSER.getConfirmation_message());
+                }
+                else{
                 //Angebot bestellt und geliefert 
                 LOGGER.info("Angebot erfolgreich bestellt: " + MESSAGEPARSER.getConfirmation_message());
-                //->Stock auffüllen
+                 //->Stock auffüllen
                 LOGGER.info("Neuer Artikelstand: "
                         + MESSAGEPARSER.getArtikel()
                         + " "
                         + Stock.getInstance().updateStock(
                                 MESSAGEPARSER.getArtikel(),
-                                MESSAGEPARSER.getAnzahl()));
-
-                //aus Liste löschen / Liste updaten
-                if(OFFERS.deleteOffer(new Offer(MESSAGEPARSER.getProducer(),
+                                MESSAGEPARSER.getItemsSent()));
+                }
+                //aus Liste der Angebote löschen, egal ob bekommen oder nicht -> gleiche Konsequenz
+                OFFERS.deleteOfferIfEqualTo(new Offer(MESSAGEPARSER.getProducer(),
                         MESSAGEPARSER.getArtikel(),
                         MESSAGEPARSER.getPreis(),
-                        MESSAGEPARSER.getAnzahl()))){
-                };
+                        MESSAGEPARSER.getAnzahl()));
                 break;
 
             case OFFER:
-
+                //Wenn Angebot erhalten wird gespeichert
                 if (OFFERS.addOffer(new Offer(MESSAGEPARSER.getProducer(),
                         MESSAGEPARSER.getArtikel(),
                         MESSAGEPARSER.getPreis(),
                         MESSAGEPARSER.getAnzahl()))) {
                     System.out.println("Angebot erhalten: " + MESSAGEPARSER.getOffer_message());
+                }else{
+                    //Falls Fehler beim speichern INFO
+                System.out.println("Angebot konnte nicht gespeichert werden: " + MESSAGEPARSER.getOffer_message());
                 }
                 break;
             default:

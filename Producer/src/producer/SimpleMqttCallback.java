@@ -14,6 +14,8 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import organizeoffers.Offer;
+import organizeoffers.Offers;
 
 /**
  *
@@ -38,7 +40,18 @@ public class SimpleMqttCallback implements MqttCallback {
         switch (MESSAGEPARSER.getMessagetype()) {
             case ORDER:
                 System.out.println("Bestellung erhalten: " + MESSAGEPARSER.getOrder_message());
-                sendAnswerToOrder();
+
+                //Wenn Angebot vorhanden löschen und Ware versenden
+                if (Offers.getInstance().deleteOfferIfEqualTo(
+                        new Offer(
+                                CliParameters.getInstance().getProducer(),
+                                MESSAGEPARSER.getArtikel(), MESSAGEPARSER.getPreis(),
+                                MESSAGEPARSER.getAnzahl()))) {
+                    sendAnswerToOrder(true);
+                } else {
+                    //Wenn nicht vorhanden, Nachricht mit Ablehnungn senden
+                    sendAnswerToOrder(false);
+                }
                 break;
             default:
 
@@ -54,13 +67,21 @@ public class SimpleMqttCallback implements MqttCallback {
         }
     }
 
-    private void sendAnswerToOrder() {
+    /**
+     * Sendet Nachricht via MQTT
+     */
+    private void sendAnswerToOrder(boolean sentOrder) {
 
-        String messageToSend=MESSAGEPARSER.makeConfirmation_message(CliParameters.getInstance().getProducer()
-                , MESSAGEPARSER.getStore()
-                , MESSAGEPARSER.getArtikel()
-                , MESSAGEPARSER.getPreis()
-                ,MESSAGEPARSER.getAnzahl());
+        int anzahl = 0; //Wenn Artikel nicht mehr vorhanden sende 0
+        if (sentOrder) {
+            anzahl = MESSAGEPARSER.getAnzahl();
+        }
+        String messageToSend = MESSAGEPARSER.makeConfirmation_message(CliParameters.getInstance().getProducer(),
+                MESSAGEPARSER.getStore(),
+                MESSAGEPARSER.getArtikel(),
+                MESSAGEPARSER.getPreis(),
+                MESSAGEPARSER.getAnzahl(),
+                anzahl);
         String topic = MESSAGEPARSER.getTopic();
         // Start the MQTT Publisher.
         Publisher publisher = new Publisher(topic, messageToSend);

@@ -25,9 +25,12 @@ public class ThriftHandler {
 
     /**
      * Bestellt Items über die Schnittstelle
-     * Bestellbare Items: "milk" , "yoghurt"
-                         "sausage" , "butter"
-                        "chocolate"
+     * Bestellbare Items:
+     * public static final String MILCH = "Milch";
+       public static final String BUTTER = "Butter";
+       public static final String WURST = "Wurst";
+       public static final String YOGHURT = "Yoghurt";
+       public static final String SCHOKOLADE = "Schokolade";
      * @return  
      */
     private static String orderItem(StoreService.Client client, String item, String number) throws TException {
@@ -35,6 +38,9 @@ public class ThriftHandler {
         return client.order(number + item);
     }
 
+    /**
+     * Rechnung anfordern
+     */
     private static String getInvoice(StoreService.Client client,String message) throws TException {
         return client.invoice(message);
     }

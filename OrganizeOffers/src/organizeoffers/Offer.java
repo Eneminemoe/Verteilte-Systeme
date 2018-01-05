@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package store;
+package organizeoffers;
 
 import mqtt.CliParameters;
 import mqtt.MessageParser;
@@ -20,6 +20,13 @@ public class Offer {
     private final double Preis;
     private int Anzahl;
 
+    /**
+     * Constructor
+     * @param producer
+     * @param item
+     * @param preis
+     * @param number
+     */
     public Offer(String producer, String item, double preis, int number) {
         this.Producer = producer;
         this.Anzahl = number;
@@ -74,6 +81,12 @@ public class Offer {
         return Topic;
     }
 
+    /**
+     * Compare Offer-Objects
+     * 
+     * @param offer to compare with
+     * @return true if same 
+     */
     public boolean equals(Offer offer) {
 
         return (this.Producer == null ? offer.getProducer() == null : this.Producer.equals(offer.getProducer()))
