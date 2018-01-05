@@ -5,6 +5,8 @@
  */
 package store;
 
+import organizeoffers.Offer;
+import organizeoffers.Offers;
 import mqtt.Publisher;
 
 /**
@@ -14,7 +16,8 @@ import mqtt.Publisher;
 public class Stock {
 
     private static Stock instance;
-    public static final int MAXNUMBEROFEACHITEM = 2000;
+    
+    //public static final int MAXNUMBEROFEACHITEM = 2000;
 
     //Anzahl lagernder Artikel
     private int sum = 1250;
@@ -159,43 +162,36 @@ public class Stock {
         
         Offer offer = null;
         for (constants.Constants.Items i : constants.Constants.Items.values()) {
-
-            //System.out.println("chekStock - Entry: "+i/*+offer.getArtikel()+ ":"+offer.getPreis()*/);
             
             switch (i) {
 
-                case Butter: //System.out.println("1");
+                case Butter:
                     offer = offers.getBestOfferFor(constants.Constants.BUTTER);
                     if (offer != null) {
-                        //System.out.println("Stock-ORDER"+" 1:"+offer.getArtikel()+ ":"+offer.getPreis());
                         order(offer);
                     }
                     break;
-                case Milch: //System.out.println("2");
+                case Milch:
                     offer = offers.getBestOfferFor(constants.Constants.MILCH);
                     if (offer != null) {
-                        //System.out.println("Stock-ORDER"+" 2:"+offer.getArtikel()+ ":"+offer.getPreis());
                         order(offer);
                     }
                     break;
-                case Schokolade: //System.out.println("3");
+                case Schokolade:
                     offer = offers.getBestOfferFor(constants.Constants.SCHOKOLADE);
                     if (offer != null) {
-                        //System.out.println("Stock-ORDER"+" 3:"+offer.getArtikel()+ ":"+offer.getPreis());
                         order(offer);
                     }
                     break;
-                case Wurst: //System.out.println("4");
+                case Wurst:
                     offer = offers.getBestOfferFor(constants.Constants.WURST);
                     if (offer != null) {
-                        //System.out.println("Stock-ORDER"+" 4:"+offer.getArtikel()+ ":"+offer.getPreis());
                         order(offer);
                     }
                     break;
-                case Yoghurt: //System.out.println("5");
+                case Yoghurt:
                     offer = offers.getBestOfferFor(constants.Constants.YOGHURT);
                     if (offer != null) {
-                        //System.out.println("Stock-ORDER"+" 5:"+offer.getArtikel()+ ":"+offer.getPreis());
                         order(offer);
                     }
                     break;

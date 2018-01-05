@@ -20,3 +20,5 @@
 /Constants/dist/
 /Constants/build/
 *.lck
+/OrganizeOffers/nbproject/private/
+/OrganizeOffers/build/

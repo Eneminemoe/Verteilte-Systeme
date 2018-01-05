@@ -150,8 +150,13 @@ public class Server extends Thread {
         return items;
     }
 
-    public static void orderItems(String i) {
-        String answer = ThriftHandler.establishThriftConnection(i, ThriftHandler.ORDERITEMS, 1);
+    /**
+     * Bestellt Artikel im Store vie THRIFT 
+     * Anzahl auf 9 festgelegt
+     * @param itemToOrder 
+     */
+    public static void orderItems(String itemToOrder) {
+        String answer = ThriftHandler.establishThriftConnection(itemToOrder, ThriftHandler.ORDERITEMS, 1);
         
         if (answer.contains("lieferbar")) {
             LOGGER.info(answer);

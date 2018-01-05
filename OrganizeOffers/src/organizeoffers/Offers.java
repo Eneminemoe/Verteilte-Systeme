@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package store;
+package organizeoffers;
 
 import java.util.ArrayList;
 
@@ -13,8 +13,9 @@ import java.util.ArrayList;
  */
 public class Offers {
 
-    private ArrayList<Offer> offers = new ArrayList<>();
+    //One and only instance of Offers
     private static Offers instance;
+    private ArrayList<Offer> offers = new ArrayList<>();
     private ArrayList<String> producers = new ArrayList<>();
 
     public static Offers getInstance() {
@@ -80,6 +81,9 @@ public class Offers {
 
     }
 
+    /**
+     * Checks if the Offer is from a new Producer.
+     */
     private boolean checkIfProducerAlreadyExists(Offer offer) {
 
         String newOfferProducer = offer.getProducer();
@@ -91,7 +95,12 @@ public class Offers {
         return false;
     }
 
-    public boolean deleteOffer(Offer offer) {
+    /**
+     * Deletes Offer if it is equal to an existing
+     * @param offer The offer to check
+     * @return true if existing
+     */
+    public boolean deleteOfferIfEqualTo(Offer offer) {
 
         for (int i = 0; i < offers.size(); i++) {
             if (offers.get(i).equals(offer)) {
@@ -103,6 +112,9 @@ public class Offers {
         return false;
     }
 
+    /**
+     * Display all current Offers
+     */
     public void showCurrentOffers() {
 
         for (Offer o : offers) {

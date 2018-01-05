@@ -36,19 +36,23 @@ public class Constants {
      */
     public static final String TOPIC_MARKETPLACE = "MARKET";
     /**
-     * The RECEIVE_BROKER for Producers to be expanded by Producername
-     * like Producer + TOPIC_RECEIVE_ORDER
+     * The RECEIVE_BROKER for Producers to be expanded by Producername like
+     * Producer + TOPIC_RECEIVE_ORDER
      */
     public static final String TOPIC_RECEIVE_ORDER = "_RECEIVE_ORDER";
     /**
      * THE CONFIRMATION_BROKER for PRODUCERS and Store. to be expanded by
      * Producer and Store like Store + TOPIC_CONFIRAMTION
      */
-    public static final String TOPIC_CONFIRMATION = "_CONFIRAMTION";
+    public static final String TOPIC_CONFIRMATION = "_CONFIRMATION";
     /**
-     * Time to deliver a new Offer in milliseconds
+     * Time to deliver a new Offer in seconds
      */
-    public static final int PERIDOIC_UPDATE = 5*1000;
+    public static final int PERIDOIC_UPDATE = 5;
+    /**
+     *
+     */
+    public static final int NOITEMSENT = 0;
 
     /**
      * The type of message for the Parser
@@ -56,14 +60,16 @@ public class Constants {
     public enum messagetype {
         OFFER, ORDER, CONFIRMATION
     }
-    public static final String OFFER="Offer:";
-    public static final String ORDER="Order:";
-    public static final String CONFIRMATION="Confirmation";
-    
+    public static final String OFFER = "Offer:";
+    public static final String ORDER = "Order:";
+    public static final String CONFIRMATION = "Confirmation";
+
     /**
      * The Itmes available which can be bought, selled and held
      */
-    public enum Items{Milch,Butter,Wurst,Schokolade,Yoghurt}
+    public enum Items {
+        Milch, Butter, Wurst, Schokolade, Yoghurt
+    }
     public static final String MILCH = "Milch";
     public static final String BUTTER = "Butter";
     public static final String WURST = "Wurst";
@@ -76,12 +82,12 @@ public class Constants {
     public static final int PAYLOAD_FOR_UDP = 1024;
     public static final int UDP_SERVER_PORT = 6542;
     public static final int UDP_CLIENT_PORT = 6543;
-    
+
     /**
      * TCP Communication Constants
      */
     public static final int TCP_LISTENING_SERVER_SOCKET = 6544;
-    
+
     /**
      * THRIFT Constants
      */
