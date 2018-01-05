@@ -32,27 +32,44 @@ public class SimpleMqttCallback implements MqttCallback {
     }
 
     /**
-     * Get message via MQTT 
+     * Get message via MQTT
+     *
      * @param s
      * @param mqttMessage
      * @throws java.lang.Exception
      */
     @Override
     public void messageArrived(String s, MqttMessage mqttMessage) throws Exception {
-        LOGGER.info("Message received: " + new String(mqttMessage.getPayload()));
         //Nachricht verarbeiten
         MESSAGEPARSER.parseMessage(new String(mqttMessage.getPayload()));
         switch (MESSAGEPARSER.getMessagetype()) {
             case CONFIRMATION:
-                LOGGER.info(MESSAGEPARSER.getConfirmation_message());
-                break;
-            case OFFER:
-               if(OFFERS.addOffer(new Offer(MESSAGEPARSER.getProducer(),
-                         MESSAGEPARSER.getArtikel(),
-                         MESSAGEPARSER.getPreis(),
+                //Angebot bestellt und geliefert 
+                LOGGER.info("Angebot erfolgreich bestellt: " + MESSAGEPARSER.getConfirmation_message());
+                //->Stock auffüllen
+                LOGGER.info("Neuer Artikelstand: "
+                        + MESSAGEPARSER.getArtikel()
+                        + " "
+                        + Stock.getInstance().updateStock(
+                                MESSAGEPARSER.getArtikel(),
+                                MESSAGEPARSER.getAnzahl()));
+
+                //aus Liste löschen / Liste updaten
+                if(OFFERS.deleteOffer(new Offer(MESSAGEPARSER.getProducer(),
+                        MESSAGEPARSER.getArtikel(),
+                        MESSAGEPARSER.getPreis(),
                         MESSAGEPARSER.getAnzahl()))){
-                   System.out.println("Angebot erhalten: "+ MESSAGEPARSER.getOffer_message());
-               }
+                };
+                break;
+
+            case OFFER:
+
+                if (OFFERS.addOffer(new Offer(MESSAGEPARSER.getProducer(),
+                        MESSAGEPARSER.getArtikel(),
+                        MESSAGEPARSER.getPreis(),
+                        MESSAGEPARSER.getAnzahl()))) {
+                    System.out.println("Angebot erhalten: " + MESSAGEPARSER.getOffer_message());
+                }
                 break;
             default:
         }

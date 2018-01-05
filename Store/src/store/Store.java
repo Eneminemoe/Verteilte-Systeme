@@ -5,6 +5,7 @@
  */
 package store;
 
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -13,18 +14,22 @@ import org.apache.thrift.TException;
 import org.apache.thrift.server.*;
 import org.apache.thrift.transport.*;
 import mqtt.CliProcessor;
+import mqtt.CliParameters;
 
 /**
  *
  * @author Jens
  */
-public class Store implements StoreService.Iface {
+public class Store extends Thread implements StoreService.Iface {
 
+    //TIMETOWAIT in seconds for peridoic ordering of items
+    private static final int TIMETOWAIT = 20;
     public static Store store;
     public static StoreService.Processor processor;
     private static Invoice invoice;
     private static Stock stock_instance;
     private static Offers offers;
+    private static ArrayList<String> subscribedProducers;
 
     /**
      * @param args the command line arguments
@@ -35,10 +40,14 @@ public class Store implements StoreService.Iface {
             invoice = new Invoice();
             processor = new StoreService.Processor(store);
             stock_instance = Stock.getInstance();
-            offers=Offers.getInstance();
+            offers = Offers.getInstance();
+            subscribedProducers = new ArrayList<>();
+
+            store.start();
 
             //MQTT
             CliProcessor.getInstance().parseCliOptions(args);
+            System.out.println("Store: " + CliParameters.getInstance().getStore());
             Subscriber subscriber = new Subscriber(constants.Constants.TOPIC_MARKETPLACE);
             subscriber.run();
 
@@ -47,19 +56,26 @@ public class Store implements StoreService.Iface {
              */
             simpleServer(processor);
 
-            while (true) {
-                //Artikel nachbestellen
-                waitSeconds(30);
-                stock_instance.checkStockandOrder(offers);
-            }
-
         } catch (Exception e) {
+        }
+
+    }
+
+    @Override
+    public void run() {
+        while (true) {
+            //Artikel nachbestellen
+            waitSeconds(TIMETOWAIT);
+            checkAndSubscribeToProducers();
+            waitSeconds(2);
+            stock_instance.checkStockandOrder(offers);
+            waitSeconds(2);
+            offers.showCurrentOffers();
         }
     }
 
     /**
-     * Function processes prder and checks Stock after an order has been sent
-     * Eventually orders items if offer from producer is available
+     * Function processes order and checks Stock
      *
      * @param message Anzahl und Typ Artikel in Form von xitem
      * @return String,
@@ -77,7 +93,7 @@ public class Store implements StoreService.Iface {
 
             System.out.println("Bestellung eingegangen: " + tmp + " " + message);
 
-            switch (message) {
+            switch (message) { //schauen ob auf Lager und Lager updaten, falls versendbar
 
                 case constants.Constants.MILCH:
                     if (stock_instance.getMilk() < tmp) {
@@ -191,6 +207,32 @@ public class Store implements StoreService.Iface {
             TimeUnit.SECONDS.sleep(seconds);
         } catch (InterruptedException ex) {
             Logger.getLogger(Store.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    /**
+     * Kontrolliert, ob bei allen Producern auf CONFIRMATION_Topic subscribed
+     * Wenn nicht, wird beim jeweiligen subscribed und der Liste hinzugefügt
+     */
+    private static void checkAndSubscribeToProducers() {
+        boolean alreadySubscribed;
+
+        for (String producer : offers.getProducers()) {
+            alreadySubscribed = false; //Zurücksetzen für nächste Iteration
+            for (String subscribedProducer : subscribedProducers) {
+                if (producer.equals(subscribedProducer)) {  //Bereits subscribed
+                    alreadySubscribed = true;
+
+                }
+            }
+
+            if (!alreadySubscribed) {
+                subscribedProducers.add(producer);
+                Subscriber subscriber = new Subscriber(
+                        CliParameters.getInstance().getStore()
+                        + constants.Constants.TOPIC_CONFIRMATION);
+                subscriber.run();
+            }
         }
     }
 

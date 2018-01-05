@@ -37,17 +37,18 @@ public class Constants {
     public static final String TOPIC_MARKETPLACE = "MARKET";
     /**
      * The RECEIVE_BROKER for Producers to be expanded by Producername
+     * like Producer + TOPIC_RECEIVE_ORDER
      */
-    public static final String TOPIC_RECEIVE_ORDER = "_RECEIVED_ORDER";
+    public static final String TOPIC_RECEIVE_ORDER = "_RECEIVE_ORDER";
     /**
      * THE CONFIRMATION_BROKER for PRODUCERS and Store. to be expanded by
-     * Producername
+     * Producer and Store like Store + TOPIC_CONFIRAMTION
      */
     public static final String TOPIC_CONFIRMATION = "_CONFIRAMTION";
     /**
      * Time to deliver a new Offer in milliseconds
      */
-    public static final int PERIDOIC_UPDATE = 20000;
+    public static final int PERIDOIC_UPDATE = 5*1000;
 
     /**
      * The type of message for the Parser
@@ -55,9 +56,14 @@ public class Constants {
     public enum messagetype {
         OFFER, ORDER, CONFIRMATION
     }
+    public static final String OFFER="Offer:";
+    public static final String ORDER="Order:";
+    public static final String CONFIRMATION="Confirmation";
+    
     /**
      * The Itmes available which can be bought, selled and held
      */
+    public enum Items{Milch,Butter,Wurst,Schokolade,Yoghurt}
     public static final String MILCH = "Milch";
     public static final String BUTTER = "Butter";
     public static final String WURST = "Wurst";

@@ -43,6 +43,10 @@ public class CliParameters {
      */
     private String producer="defaultProducer";
     /**
+     * The Store
+     */
+    private String store ="defaultStore";
+    /**
      * The static getter for the CLI parameters instance.
      *
      * @return The CLI parameters instance.
@@ -123,5 +127,19 @@ public class CliParameters {
      */
     public void setProducer(String producer) {
         this.producer = producer;
+    }
+
+    /**
+     * @return the store
+     */
+    public String getStore() {
+        return store;
+    }
+
+    /**
+     * @param store the store to set
+     */
+    public void setStore(String store) {
+        this.store = store;
     }
 }

@@ -5,6 +5,8 @@
  */
 package store;
 
+import mqtt.Publisher;
+
 /**
  *
  * @author Jens
@@ -31,6 +33,36 @@ public class Stock {
 
     //Prevent Instantiation
     private Stock() {
+    }
+
+    /**
+     * Updates the item
+     *
+     * @param item to update
+     * @param number
+     * @return bool if succesfull
+     */
+    public int updateStock(String item, int number) {
+
+        switch (item) {
+            case constants.Constants.BUTTER:
+                butter += number;
+                return butter;
+            case constants.Constants.MILCH:
+                milk += number;
+                return milk;
+            case constants.Constants.SCHOKOLADE:
+                chocolate += number;
+                return chocolate;
+            case constants.Constants.WURST:
+                sausage += number;
+                return sausage;
+            case constants.Constants.YOGHURT:
+                yoghurt += number;
+                return yoghurt;
+            default:
+                return 0;
+        }
     }
 
     /**
@@ -124,22 +156,59 @@ public class Stock {
      * @param offers Object Offers with every offer via MQTT
      */
     public void checkStockandOrder(Offers offers) {
-
         
-/*
-        switch (item) {
+        Offer offer = null;
+        for (constants.Constants.Items i : constants.Constants.Items.values()) {
 
-            case "milk":
-                break;
-            case "yoghurt":
-                break;
-            case "sausage":
-                break;
-            case "butter":
-                break;
-            case "chocolate":
-                break;
-            default:
-        }*/
+            //System.out.println("chekStock - Entry: "+i/*+offer.getArtikel()+ ":"+offer.getPreis()*/);
+            
+            switch (i) {
+
+                case Butter: //System.out.println("1");
+                    offer = offers.getBestOfferFor(constants.Constants.BUTTER);
+                    if (offer != null) {
+                        //System.out.println("Stock-ORDER"+" 1:"+offer.getArtikel()+ ":"+offer.getPreis());
+                        order(offer);
+                    }
+                    break;
+                case Milch: //System.out.println("2");
+                    offer = offers.getBestOfferFor(constants.Constants.MILCH);
+                    if (offer != null) {
+                        //System.out.println("Stock-ORDER"+" 2:"+offer.getArtikel()+ ":"+offer.getPreis());
+                        order(offer);
+                    }
+                    break;
+                case Schokolade: //System.out.println("3");
+                    offer = offers.getBestOfferFor(constants.Constants.SCHOKOLADE);
+                    if (offer != null) {
+                        //System.out.println("Stock-ORDER"+" 3:"+offer.getArtikel()+ ":"+offer.getPreis());
+                        order(offer);
+                    }
+                    break;
+                case Wurst: //System.out.println("4");
+                    offer = offers.getBestOfferFor(constants.Constants.WURST);
+                    if (offer != null) {
+                        //System.out.println("Stock-ORDER"+" 4:"+offer.getArtikel()+ ":"+offer.getPreis());
+                        order(offer);
+                    }
+                    break;
+                case Yoghurt: //System.out.println("5");
+                    offer = offers.getBestOfferFor(constants.Constants.YOGHURT);
+                    if (offer != null) {
+                        //System.out.println("Stock-ORDER"+" 5:"+offer.getArtikel()+ ":"+offer.getPreis());
+                        order(offer);
+                    }
+                    break;
+                default:
+            }
+        }
+    }
+
+    private void order(Offer offer) {
+        // Start the MQTT Publisher and send an order
+        
+        Publisher publisher = new Publisher(offer.getTopic(), offer.orderOffer());
+        publisher.run();
+
     }
 }

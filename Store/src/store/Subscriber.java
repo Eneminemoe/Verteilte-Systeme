@@ -6,7 +6,6 @@ package store;
  * and open the template in the editor.
  */
 import mqtt.CliParameters;
-import mqtt.MessageParser;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.slf4j.Logger;
@@ -60,7 +59,7 @@ public class Subscriber {
 
             // Connect to the MQTT broker.
             client.connect();
-            LOGGER.info("Connected to MQTT broker: " + client.getServerURI());
+            //LOGGER.info("Connected to MQTT broker: " + client.getServerURI());
 
             // Subscribe to a topic.
             client.subscribe(cliParameters.getTopic());

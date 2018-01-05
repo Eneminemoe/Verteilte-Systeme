@@ -32,7 +32,7 @@ public class Fridge {
         while (true) {
 
             takeItemOut(Constants.MILCH);
-            waitSeconds(1);
+            waitSeconds(2);
         }
     }
 

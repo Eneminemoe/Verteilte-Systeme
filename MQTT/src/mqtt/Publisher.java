@@ -63,7 +63,7 @@ public class Publisher {
 
             // Connect to the MQTT broker using the connection options.
             client.connect(mqttConnectOpts);
-            LOGGER.info("Connected to MQTT broker: " + client.getServerURI());
+            //LOGGER.info("Connected to MQTT broker: " + client.getServerURI());
 
             // Create the message and set a quality-of-service parameter.
             MqttMessage message = new MqttMessage(cliParameters.getMessage().getBytes());
@@ -75,10 +75,7 @@ public class Publisher {
 
             // Disconnect from the MQTT broker.
             client.disconnect();
-            LOGGER.info("Disconnected from MQTT broker.");
-
-            // Exit the app explicitly.
-            //System.exit(Constants.EXIT_CODE_SUCCESS);
+            //LOGGER.info("Disconnected from MQTT broker.");
 
         } catch (MqttException e) {
             LOGGER.error("An error occurred: " + e.getMessage());

@@ -66,6 +66,9 @@ public class CliProcessor {
             if (line.hasOption("x")) {
                 this.cliParameters.setProducer(line.getOptionValue('x'));
             }
+             if (line.hasOption("s")) {
+                this.cliParameters.setStore(line.getOptionValue('s'));
+            }
             // Get whatever ist left, after the options have been processed.
             if (line.getArgList() == null || line.getArgList().isEmpty()) {
                 LOGGER.info("No message given; using the default message.");
@@ -130,6 +133,13 @@ public class CliProcessor {
                 .hasArg()
                 .argName("PRODUCER")
                 .build();
+        // The producer option.
+        Option store = Option.builder("s")
+                .longOpt("Store")
+                .desc("The Name of the Store.")
+                .hasArg()
+                .argName("STORE")
+                .build();
 
         // Create and add options.
         Options options = new Options();
@@ -139,6 +149,7 @@ public class CliProcessor {
         options.addOption(protocol);
         options.addOption(topic);
         options.addOption(producer);
+        options.addOption(store);
 
         // Return options.
         return options;

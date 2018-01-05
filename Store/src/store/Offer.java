@@ -5,22 +5,27 @@
  */
 package store;
 
+import mqtt.CliParameters;
+import mqtt.MessageParser;
+
 /**
  *
  * @author Jens
  */
 public class Offer {
 
+    private final String Topic;
     private final String Producer;
     private final String Artikel;
-    private final float Preis;
+    private final double Preis;
     private int Anzahl;
-    
-    public Offer(String producer,String item,float preis,int number){
-        this.Producer=producer;
-        this.Anzahl=number;
-        this.Preis=preis;
-        this.Artikel=item;
+
+    public Offer(String producer, String item, double preis, int number) {
+        this.Producer = producer;
+        this.Anzahl = number;
+        this.Preis = preis;
+        this.Artikel = item;
+        this.Topic = producer + constants.Constants.TOPIC_RECEIVE_ORDER;
     }
 
     /**
@@ -40,7 +45,7 @@ public class Offer {
     /**
      * @return the Preis
      */
-    public float getPreis() {
+    public double getPreis() {
         return Preis;
     }
 
@@ -57,6 +62,24 @@ public class Offer {
     public void setAnzahl(int Anzahl) {
         this.Anzahl = Anzahl;
     }
-    
-    
+
+    public String orderOffer() {
+        return MessageParser.getInstance().makeOrder_message(CliParameters.getInstance().getStore(), Artikel, Preis, Anzahl);
+    }
+
+    /**
+     * @return the Topic
+     */
+    public String getTopic() {
+        return Topic;
+    }
+
+    public boolean equals(Offer offer) {
+
+        return (this.Producer == null ? offer.getProducer() == null : this.Producer.equals(offer.getProducer()))
+                && this.Anzahl == offer.getAnzahl()
+                && this.Preis == offer.getPreis()
+                && (this.Artikel == null ? offer.getArtikel() == null : this.Artikel.equals(offer.getArtikel()));
+    }
+
 }

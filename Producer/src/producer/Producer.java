@@ -30,6 +30,8 @@ public class Producer {
         // Parse the command line.
         CliProcessor.getInstance().parseCliOptions(args);
         
+
+        
         //PRODUCER needs to subscribed to a reiceive_order topic
          Subscriber subscriber = new Subscriber(CliParameters.getInstance().getProducer()+constants.Constants.TOPIC_RECEIVE_ORDER);
          subscriber.run();
@@ -39,7 +41,7 @@ public class Producer {
             generateOffer();
             
             // Start the MQTT Publisher and send offer
-            Publisher publisher = new Publisher(constants.Constants.TOPIC_MARKETPLACE, messageToSend);
+            Publisher publisher = new Publisher(MessageParser.getInstance().getTopic(), messageToSend);
             publisher.run();
 
             try {
@@ -58,7 +60,7 @@ public class Producer {
      * number to offer between 1 and 50 
      * price between 0.01 and 3 EURO
      */
-    private static void generateOffer() {
+    private static String generateOffer() {
         int randomNum = ThreadLocalRandom.current().nextInt(0, 4 + 1); //Zufall 0-4
         int Anzahl = ThreadLocalRandom.current().nextInt(1, 50 + 1); //Zufall 1-50
         double p = ThreadLocalRandom.current().nextDouble(0.01,3);
@@ -83,8 +85,8 @@ public class Producer {
             default:
 
         }
-        //OFFER
-        messageToSend
+        //create Offer and Topic is set within makeOffermessage
+       return messageToSend
                 = MessageParser.getInstance().makeOffermessage(
                         CliParameters.getInstance().getProducer(),
                          Artikel,

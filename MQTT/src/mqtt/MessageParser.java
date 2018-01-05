@@ -5,8 +5,6 @@
  */
 package mqtt;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -16,17 +14,22 @@ import org.slf4j.LoggerFactory;
 public class MessageParser {
 
     /**
-     * The logger.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(MessageParser.class);
-    /**
      * The one and only instance of MessageParser.
      */
     private static MessageParser instance;
     private String Producer;
+    private String Store;
     private String Artikel;
-    private float Preis;
+    private double Preis;
     private int Anzahl;
+    /**
+     * Topic to publish to can be:
+     * for Offer: TOPIC_MARKETPLACE
+     * for Order: producer + TOPIC_TOPIC_RECEIVE_ORDER
+     * for Confirmation: store+TOPIC_CONFIRMATION 
+     * 
+     */
+    private String Topic;
     private String offer_message;
     private String order_message;
     private String confirmation_message;
@@ -42,14 +45,14 @@ public class MessageParser {
     /**
      * Parses the given String
      *
-     * @param message in form of "OFFER:producer:artikel:price:number"
-     * or "ORDER:artikel:price:number"
-     * or "CONFIRMATION:Order_received_and_sent"
+     * @param message in form of "OFFER:producer:artikel:price:number" or
+     * "ORDER:artikel:price:number" or "CONFIRMATION:Order_received_and_sent"
      */
     public void parseMessage(String message) {
 
         message = message.trim();
         String[] words = {"", ""};
+        double p;
 
         if (message.contains(":")) {
             words = message.split(":");
@@ -72,17 +75,26 @@ public class MessageParser {
                 this.offer_message = message;
                 Producer = words[1];  // intended to start at 1 -> [0] = "OFFER" / "ORDER"
                 Artikel = words[2];
-                Preis = Float.valueOf(words[3]);
+                p = Float.valueOf(words[3]);
+                Preis = Math.round(p * 100) / 100.0; //2 Nachkommastellen
                 Anzahl = Integer.valueOf(words[4]);
                 break;
             case ORDER:
                 this.order_message = message;
-                Artikel = words[1]; // intended to start at 1 -> [0] = "OFFER" / "ORDER"
-                Preis = Float.valueOf(words[2]);
-                Anzahl = Integer.valueOf(words[3]);
+                Store = words[1]; // intended to start at 1 -> [0] = "OFFER" / "ORDER"
+                Artikel = words[2];
+                p = Double.valueOf(words[3]);
+                Preis = Math.round(p * 100) / 100.0; //2 Nachkommastellen
+                Anzahl = Integer.valueOf(words[4]);
                 break;
             case CONFIRMATION:
                 this.confirmation_message = message;
+                Producer = words[1];
+                Store = words[2]; // intended to start at 1 -> [0] = "OFFER" / "ORDER"
+                Artikel = words[3];
+                p = Double.valueOf(words[4]);
+                Preis= Math.round(p * 100) / 100.0; //2 Nachkommastellen
+                Anzahl = Integer.valueOf(words[5]);
                 break;
             default:;
         }
@@ -106,7 +118,7 @@ public class MessageParser {
     /**
      * @return the Preis
      */
-    public float getPreis() {
+    public double getPreis() {
         return Preis;
     }
 
@@ -142,7 +154,7 @@ public class MessageParser {
     }
 
     /**
-     * Function that retunrs a String in form of:
+     * Function that returns a String in form of:
      * "OFFER:producer:artikel:price:number"
      *
      * @param producer The producer
@@ -152,6 +164,7 @@ public class MessageParser {
      * @return String "OFFER:producer:artikel:price:number"
      */
     public String makeOffermessage(String producer, String artikel, double price, int number) {
+        Topic=constants.Constants.TOPIC_MARKETPLACE;
         return "OFFER:"
                 + producer
                 + ":"
@@ -163,15 +176,20 @@ public class MessageParser {
     }
 
     /**
-     * Function that retunrs a String in form of: "ORDER:artikel:price:number"
+     * Function that retunrs a String in form of:
+     * "ORDER:store:artikel:price:number"
      *
+     * @param store The store which orders
      * @param artikel the artikel from the offer
      * @param price the price from the offer in EURO
      * @param number the numnber to offer
      * @return String "ORDER:artikel:price:number"
      */
-    public String makeOrder_message(String artikel, double price, int number) {
-        return "ORDER"
+    public String makeOrder_message(String store, String artikel, double price, int number) {
+        Topic=Producer+constants.Constants.TOPIC_RECEIVE_ORDER;
+        return "ORDER:"
+                + store
+                + ":"
                 + artikel
                 + ":"
                 + Double.toString(price)
@@ -180,11 +198,28 @@ public class MessageParser {
     }
 
     /**
+     * Function that retunrs a String in form of:
+     * "ORDER:producer:store:artikel:price:number"
      *
-     * @return String "CONFIRMATION:Order_received_and_sent"
+     * @param producer
+     * @param store
+     * @param artikel
+     * @param price
+     * @param number
+     * @return String "CONFIRMATION:producer:store:artikel:price:number"
      */
-    public String makeConfirmation_message() {
-        return "CONFIRMATION:Order_received_and_sent";
+    public String makeConfirmation_message(String producer, String store, String artikel, double price, int number) {
+        Topic=Store+constants.Constants.TOPIC_CONFIRMATION;
+        return "CONFIRMATION:"
+                + producer
+                + ":"
+                + store
+                + ":"
+                + artikel
+                + ":"
+                + Double.toString(price)
+                + ":"
+                + Integer.toString(number);
     }
 
     /**
@@ -192,5 +227,19 @@ public class MessageParser {
      */
     public constants.Constants.messagetype getMessagetype() {
         return messagetype;
+    }
+
+    /**
+     * @return the Store
+     */
+    public String getStore() {
+        return Store;
+    }
+
+    /**
+     * @return the Topic
+     */
+    public String getTopic() {
+        return Topic;
     }
 }

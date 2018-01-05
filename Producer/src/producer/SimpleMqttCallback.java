@@ -37,9 +37,8 @@ public class SimpleMqttCallback implements MqttCallback {
         MESSAGEPARSER.parseMessage(new String(mqttMessage.getPayload()));
         switch (MESSAGEPARSER.getMessagetype()) {
             case ORDER:
-                sendAnswerToOrder(
-                        CliParameters.getInstance().getProducer()+constants.Constants.TOPIC_CONFIRMATION
-                        ,MESSAGEPARSER.getConfirmation_message());
+                System.out.println("Bestellung erhalten: " + MESSAGEPARSER.getOrder_message());
+                sendAnswerToOrder();
                 break;
             default:
 
@@ -55,8 +54,14 @@ public class SimpleMqttCallback implements MqttCallback {
         }
     }
 
-    private void sendAnswerToOrder(String topic, String messageToSend) {
+    private void sendAnswerToOrder() {
 
+        String messageToSend=MESSAGEPARSER.makeConfirmation_message(CliParameters.getInstance().getProducer()
+                , MESSAGEPARSER.getStore()
+                , MESSAGEPARSER.getArtikel()
+                , MESSAGEPARSER.getPreis()
+                ,MESSAGEPARSER.getAnzahl());
+        String topic = MESSAGEPARSER.getTopic();
         // Start the MQTT Publisher.
         Publisher publisher = new Publisher(topic, messageToSend);
         publisher.run();
