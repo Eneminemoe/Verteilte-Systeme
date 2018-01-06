@@ -20,3 +20,6 @@
 /Constants/dist/
 /Constants/build/
 *.lck
+/MQTT/dist/
+/OrganizeOffers/dist/
+/Producer/dist/
