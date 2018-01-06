@@ -123,18 +123,17 @@ public class Offers {
      */
     public void showCurrentOffers() {
 
-        for (Offer o : offers) {
-
+        offers.forEach((o) -> {
             System.out.println(
                     "Angebot: "
-                    + o.getProducer()
-                    + ": "
-                    + o.getArtikel()
-                    + ": "
-                    + o.getPreis()
-                    + ": "
-                    + o.getAnzahl());
-        }
+                            + o.getProducer()
+                            + ": "
+                            + o.getArtikel()
+                            + ": "
+                            + o.getPreis()
+                            + ": "
+                            + o.getAnzahl());
+        });
     }
 
     /**

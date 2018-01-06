@@ -80,16 +80,16 @@ public class CliProcessor {
                 this.cliParameters.setStore(line.getOptionValue('s'));
             }
             if (line.hasOption("y")) {
-                this.cliParameters.setThriftport(Integer.getInteger(line.getOptionValue('y')));
+                this.cliParameters.setThriftport(Integer.parseInt(line.getOptionValue('y')));
             }
             if (line.hasOption("u")) {
-                this.cliParameters.setUdp_Send_To_Port(Integer.getInteger(line.getOptionValue('u')));
+                this.cliParameters.setUdp_Send_To_Port(Integer.parseInt(line.getOptionValue('u')));
             }
             if (line.hasOption("U")) {
-                this.cliParameters.setUdp_Listen_To_Port(Integer.getInteger(line.getOptionValue('U')));
+                this.cliParameters.setUdp_Listen_To_Port(Integer.parseInt(line.getOptionValue('U')));
             }
             if (line.hasOption("T")) {
-                this.cliParameters.setTcp_Listening_Server_Socket_Port(Integer.getInteger(line.getOptionValue('T')));
+                this.cliParameters.setTcp_Listening_Server_Socket_Port(Integer.parseInt(line.getOptionValue('T')));
             }
             // Get whatever ist left, after the options have been processed.
             if (line.getArgList() == null || line.getArgList().isEmpty()) {

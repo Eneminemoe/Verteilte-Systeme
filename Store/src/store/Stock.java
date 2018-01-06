@@ -5,6 +5,8 @@
  */
 package store;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import organizeoffers.Offer;
 import organizeoffers.Offers;
 import mqtt.Publisher;
@@ -16,9 +18,8 @@ import mqtt.Publisher;
 public class Stock {
 
     private static Stock instance;
-    
-    //public static final int MAXNUMBEROFEACHITEM = 2000;
 
+    //public static final int MAXNUMBEROFEACHITEM = 2000;
     //Anzahl lagernder Artikel
     private int sum = 1250;
     private int milk = 250;
@@ -159,10 +160,10 @@ public class Stock {
      * @param offers Object Offers with every offer via MQTT
      */
     public void checkStockandOrder(Offers offers) {
-        
+
         Offer offer = null;
         for (constants.Constants.Items i : constants.Constants.Items.values()) {
-            
+
             switch (i) {
 
                 case Butter:
@@ -200,9 +201,63 @@ public class Stock {
         }
     }
 
+    /**
+     * Function to order the best offer for one Item offer
+     *
+     * @param offers Object Offers with every offer via MQTT
+     * @param item
+     * @return if order succesfull
+     */
+    public synchronized boolean checkStockandOrder(Offers offers, constants.Constants.Items item) {
+
+        Offer offer = null;
+
+        switch (item) {
+
+            case Butter:
+                offer = offers.getBestOfferFor(constants.Constants.BUTTER);
+                if (offer != null) {
+                    order(offer);
+                    return true;
+                }
+                break;
+            case Milch:
+                offer = offers.getBestOfferFor(constants.Constants.MILCH);
+                if (offer != null) {
+                    order(offer);
+                    return true;
+                }
+                break;
+            case Schokolade:
+                offer = offers.getBestOfferFor(constants.Constants.SCHOKOLADE);
+                if (offer != null) {
+                    order(offer);
+                    return true;
+                }
+                break;
+            case Wurst:
+                offer = offers.getBestOfferFor(constants.Constants.WURST);
+                if (offer != null) {
+                    order(offer);
+                    return true;
+                }
+                break;
+            case Yoghurt:
+                offer = offers.getBestOfferFor(constants.Constants.YOGHURT);
+                if (offer != null) {
+                    order(offer);
+                    return true;
+                }
+                break;
+            default:
+                return false;
+        }
+        return false;
+    }
+
     private void order(Offer offer) {
         // Start the MQTT Publisher and send an order
-        
+
         Publisher publisher = new Publisher(offer.getTopic(), offer.orderOffer());
         publisher.run();
 

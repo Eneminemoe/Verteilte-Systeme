@@ -5,6 +5,7 @@
  */
 package store;
 
+import constants.SharedVariablesBetweenThreads;
 import organizeoffers.Offers;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
@@ -25,12 +26,13 @@ public class Store extends Thread implements StoreService.Iface {
 
     //TIMETOWAIT in seconds for peridoic ordering of items
     private static final int TIMETOWAIT = 20;
-    public static Store store;
+    private static Store store;
     public static StoreService.Processor processor;
     private static Invoice invoice;
     private static Stock stock_instance;
     private static Offers offers;
     private static ArrayList<String> subscribedProducers;
+    private static SharedVariablesBetweenThreads shared;
 
     /**
      * @param args the command line arguments
@@ -43,9 +45,9 @@ public class Store extends Thread implements StoreService.Iface {
             invoice = new Invoice();
             processor = new StoreService.Processor(store);
             stock_instance = Stock.getInstance();
+            shared = SharedVariablesBetweenThreads.getInstance();
             offers = Offers.getInstance();
             subscribedProducers = new ArrayList<>();
-
             //Zeigt den Store-Namen
             System.out.println("Store: " + CliParameters.getInstance().getStore());
 
@@ -70,11 +72,43 @@ public class Store extends Thread implements StoreService.Iface {
     }
 
     @Override
-    public void run() {
+    public synchronized void run() {
+
         while (true) {
 
             waitSeconds(TIMETOWAIT);
-            stock_instance.checkStockandOrder(offers);  //Artikel nachbestellen
+            //stock_instance.checkStockandOrder(offers);  //Artikel nachbestellen
+
+            if (offers != null) {
+                for (constants.Constants.Items i : constants.Constants.Items.values()) {
+
+                    //Bestellen, wenn kein Angebot vorhanden, nächstes Item
+                    if (!stock_instance.checkStockandOrder(offers, i)) {
+                        continue;
+                    }
+                    try { //warten auf Antwort
+                        wait(constants.Constants.MAX_WAIT_ON_THREAD);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(Store.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    //wenn Angebot abgelaufen, nächstes in Anspruch nehmen
+                    while (!(shared.lastDeniedOrderedItem == null)) {
+                        //Kein weiteres Angebot vorhanden, Varibale zurücksetzten
+                        if (!stock_instance.checkStockandOrder(offers, i)) {
+                            System.out.println("Kein weiteres Angebot bekannt für " + i);
+                            shared.lastDeniedOrderedItem = null;
+                        } else {
+                            //Wenn weiteres Angebot vorhanden warte auf Antwort
+                            try {
+                                wait(constants.Constants.MAX_WAIT_ON_THREAD);
+                            } catch (InterruptedException ex) {
+                                Logger.getLogger(Store.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        }
+
+                    }
+                }
+            }
             waitSeconds(2);
             offers.showCurrentOffers();
         }
@@ -190,8 +224,7 @@ public class Store extends Thread implements StoreService.Iface {
     }
 
     /**
-     * THRIFT Connection
-     * Listents to Thrift requests
+     * THRIFT Connection Listents to Thrift requests
      *
      * @param processor
      */
@@ -208,8 +241,8 @@ public class Store extends Thread implements StoreService.Iface {
 
     /**
      * Time to wait in seconds, cannot be interrupted
-     * 
-     * @param seconds time to wait 
+     *
+     * @param seconds time to wait
      */
     private static void waitSeconds(int seconds) {
         try {
@@ -220,9 +253,9 @@ public class Store extends Thread implements StoreService.Iface {
     }
 
     /**
-     * @deprecated Nicht notwendig
-     * Kontrolliert, ob bei allen Producern auf CONFIRMATION_Topic subscribed
-     * Wenn nicht, wird beim jeweiligen subscribed und der Liste hinzugefügt
+     * @deprecated Nicht notwendig Kontrolliert, ob bei allen Producern auf
+     * CONFIRMATION_Topic subscribed Wenn nicht, wird beim jeweiligen subscribed
+     * und der Liste hinzugefügt
      */
     private static void checkAndSubscribeToProducers() {
         boolean alreadySubscribed;
@@ -244,6 +277,10 @@ public class Store extends Thread implements StoreService.Iface {
                 subscriber.run();
             }
         }
+    }
+
+    public static Store getInstance() {
+        return store;
     }
 
 }

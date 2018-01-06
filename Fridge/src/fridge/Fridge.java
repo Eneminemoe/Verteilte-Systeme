@@ -5,6 +5,7 @@
  */
 package fridge;
 
+import constants.Constants;
 import java.io.*;
 import java.net.*;
 import java.util.concurrent.TimeUnit;
@@ -25,19 +26,21 @@ import mqtt.CliProcessor;
 public class Fridge {
 
     /**
+     * Hier kann man Sensoren simulieren, um Gegenstände rauszunehmen und einzufügen 
      * @param args the command line arguments
      */
     public static void main(String[] args) {
 
         CliProcessor.getInstance().parseCliOptions(args);
-        //Hier kann man nun Sensoren simulieren, um Gegenstände rauszunehmen und einzufügen
+        
+        constants.Constants.RandomEnum<constants.Constants.Items> itemtype = new Constants.RandomEnum<>(Constants.Items.class);
         while (true) {
 
-            takeItemOut(constants.Constants.MILCH);
-            
             waitSeconds(2);
+            takeItemOut(constants.Constants.parseItemToString(itemtype.random())); //Nimm zufälliges Item aus Kühlschrank
+
         }
-        
+
     }
 
     /**
@@ -65,7 +68,7 @@ public class Fridge {
      */
     private static void takeItemOut(String type) {
         sendMessage("-" + type);
-        System.out.println("Artikel genommen: "+type);
+        System.out.println("Artikel genommen: " + type);
     }
 
     /**
@@ -75,7 +78,7 @@ public class Fridge {
      */
     private static void putItemIn(String type) {
         sendMessage("+" + type);
-        System.out.println("Artikel reingelegt: "+type);
+        System.out.println("Artikel reingelegt: " + type);
     }
 
     private static void waitSeconds(int seconds) {

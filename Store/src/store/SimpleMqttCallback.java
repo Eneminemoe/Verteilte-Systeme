@@ -5,6 +5,8 @@ package store;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+import constants.Constants;
+import constants.SharedVariablesBetweenThreads;
 import organizeoffers.Offer;
 import organizeoffers.Offers;
 import mqtt.MessageParser;
@@ -41,34 +43,41 @@ public class SimpleMqttCallback implements MqttCallback {
      * @throws java.lang.Exception
      */
     @Override
-    public void messageArrived(String s, MqttMessage mqttMessage) throws Exception {
-        
+    public synchronized void messageArrived(String s, MqttMessage mqttMessage) throws Exception {
+
         //Nachricht verarbeiten: einlesen und speichern
         MESSAGEPARSER.parseMessage(new String(mqttMessage.getPayload()));
-        
+
         switch (MESSAGEPARSER.getMessagetype()) {
-            
+
             case CONFIRMATION:
                 //Wenn keine Artikel bekommen
-                if(MESSAGEPARSER.getItemsSent()== constants.Constants.NOITEMSENT){
-                LOGGER.info("Angebot ausverkauft: " + MESSAGEPARSER.getConfirmation_message());
-                }
-                else{
-                //Angebot bestellt und geliefert 
-                LOGGER.info("Angebot erfolgreich bestellt: " + MESSAGEPARSER.getConfirmation_message());
-                 //->Stock auffüllen
-                LOGGER.info("Neuer Artikelstand: "
-                        + MESSAGEPARSER.getArtikel()
-                        + " "
-                        + Stock.getInstance().updateStock(
-                                MESSAGEPARSER.getArtikel(),
-                                MESSAGEPARSER.getItemsSent()));
+                if (MESSAGEPARSER.getItemsSent() == constants.Constants.NOITEMSENT) {
+
+                    SharedVariablesBetweenThreads.getInstance().lastDeniedOrderedItem=
+                            Constants.parseStringToItem(MESSAGEPARSER.getArtikel());
+//TODO
+
+                    LOGGER.info("Angebot ausverkauft: " + MESSAGEPARSER.getConfirmation_message());
+                } else {
+                    //Bestellung nicht verweigert
+                    SharedVariablesBetweenThreads.getInstance().lastDeniedOrderedItem=null;
+                    //Angebot bestellt und geliefert 
+                    System.out.println("Angebot erfolgreich bestellt: " + MESSAGEPARSER.getConfirmation_message());
+                    //->Stock auffüllen
+                    System.out.println("Neuer Artikelstand: "
+                            + MESSAGEPARSER.getArtikel()
+                            + " "
+                            + Stock.getInstance().updateStock(
+                                    MESSAGEPARSER.getArtikel(),
+                                    MESSAGEPARSER.getItemsSent()));
                 }
                 //aus Liste der Angebote löschen, egal ob bekommen oder nicht -> gleiche Konsequenz
                 OFFERS.deleteOfferIfEqualTo(new Offer(MESSAGEPARSER.getProducer(),
                         MESSAGEPARSER.getArtikel(),
                         MESSAGEPARSER.getPreis(),
                         MESSAGEPARSER.getAnzahl()));
+
                 break;
 
             case OFFER:
@@ -78,14 +87,14 @@ public class SimpleMqttCallback implements MqttCallback {
                         MESSAGEPARSER.getPreis(),
                         MESSAGEPARSER.getAnzahl()))) {
                     System.out.println("Angebot erhalten: " + MESSAGEPARSER.getOffer_message());
-                }else{
+                } else {
                     //Falls Fehler beim speichern INFO
-                System.out.println("Angebot konnte nicht gespeichert werden: " + MESSAGEPARSER.getOffer_message());
+                    System.out.println("Angebot konnte nicht gespeichert werden: " + MESSAGEPARSER.getOffer_message());
                 }
                 break;
             default:
         }
-
+        notifyAll();
     }
 
     @Override

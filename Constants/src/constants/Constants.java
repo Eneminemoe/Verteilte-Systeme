@@ -52,13 +52,18 @@ public class Constants {
      */
     public static final int PERIDOIC_UPDATE = 5;
     /**
+     * Maximum time to wait for a notify in milliseconds 
+     */
+    public static final int MAX_WAIT_ON_THREAD= 5*1000;
+    /**
      *
      */
     public static final int NOITEMSENT = 0;
     /**
-     * 
+     *
      */
-    public static final int MINIMUMVALUEOFITEMSUNTILREORDER=3;
+    public static final int MINIMUMVALUEOFITEMSUNTILREORDER = 3;
+
     /**
      * The type of message for the Parser
      */
@@ -78,6 +83,7 @@ public class Constants {
 
     /**
      * Get randon enum
+     *
      * @param <E> The Emum to get a Random from
      */
     public static class RandomEnum<E extends Enum> {
@@ -91,6 +97,52 @@ public class Constants {
 
         public E random() {
             return values[RND.nextInt(values.length)];
+        }
+    }
+
+    /**
+     * Returns an Items Enum represendet as by the given String
+     * 
+     * @param i String to Parse
+     * @return Item Represented Item
+     */
+    public static Items parseStringToItem(String i) {
+        switch (i) {
+            case BUTTER:
+                return Items.Butter;
+            case MILCH:
+                return Items.Milch;
+            case SCHOKOLADE:
+                return Items.Schokolade;
+            case WURST:
+                return Items.Wurst;
+            case YOGHURT:
+                return Items.Yoghurt;
+            default:
+                return null;
+        }
+    }
+    
+    /**
+     * Parses the Item to a String
+     * 
+     * @param i Item to parse
+     * @return the representing String
+     */
+       public static String parseItemToString(Items i) {
+        switch (i) {
+            case Butter:
+                return BUTTER;
+            case Milch:
+                return MILCH;
+            case Schokolade:
+                return SCHOKOLADE;
+            case Wurst:
+                return WURST;
+            case Yoghurt:
+                return YOGHURT;
+            default:
+                return null;
         }
     }
 
