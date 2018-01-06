@@ -3,13 +3,11 @@ VS WS 17/18
 
 Um die Kommunikation zwischen mehreren Producern, Stores und Kühlschränken zu gewährleisten müssen Parameter bei Programmstart angegeben werden.
 
-Kühlschrank und Server müssen angepasst sein: UDP - Ports
-
-Server muss TCP-Port zugewiesen werden
-Server muss THRIFT - Port des Empfängers kennen
-
-Store und Producer benötigen jeweils einen eindeutigen Namen.
-Parameter für MQTT müssen nicht geändert werden. DEFAULT-Werte zum Test ausreichend.
+* Kühlschrank und Server müssen angepasst sein: UDP - Ports
+* Server muss TCP-Port zugewiesen werden
+* Server muss THRIFT - Port des Empfängers kennen
+* Store und Producer benötigen jeweils einen eindeutigen Namen.
+* Parameter für MQTT müssen nicht geändert werden. DEFAULT-Werte zum Test ausreichend.
 
 
 HINWEIS: Nicht alle Parameter werden durchweg von allen Programmen genutzt.
