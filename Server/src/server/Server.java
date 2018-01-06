@@ -133,8 +133,7 @@ public class Server extends Thread {
         } else if (s.startsWith("-")) {
             s = s.substring(1);
 
-            if (Server.items.takeItemOut(Server.items.ItemToAlter(s)) < 3) { // Wenn weniger als 2 eines Artikels vorhanden, nachbestellen
-                //in THREAD auslagern?
+            if (Server.items.takeItemOut(Server.items.ItemToAlter(s)) <= constants.Constants.MINIMUMVALUEOFITEMSUNTILREORDER) {
                 orderItems(s);
             }
 

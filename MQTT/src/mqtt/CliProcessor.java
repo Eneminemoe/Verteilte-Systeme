@@ -163,7 +163,7 @@ public class CliProcessor {
                 .argName("STORE")
                 .build();
         // The Thriftport option.
-        Option thrift = Option.builder("s")
+        Option thrift = Option.builder("y")
                 .longOpt("Thriftport")
                 .desc("The Thriftport to use for communication.")
                 .hasArg()

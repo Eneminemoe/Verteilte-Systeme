@@ -191,6 +191,7 @@ public class Store extends Thread implements StoreService.Iface {
 
     /**
      * THRIFT Connection
+     * Listents to Thrift requests
      *
      * @param processor
      */

@@ -55,7 +55,10 @@ public class Constants {
      *
      */
     public static final int NOITEMSENT = 0;
-
+    /**
+     * 
+     */
+    public static final int MINIMUMVALUEOFITEMSUNTILREORDER=3;
     /**
      * The type of message for the Parser
      */
