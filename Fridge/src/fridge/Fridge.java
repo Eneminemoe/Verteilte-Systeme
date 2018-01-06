@@ -5,7 +5,6 @@
  */
 package fridge;
 
-import constants.Constants;
 import java.io.*;
 import java.net.*;
 import java.util.concurrent.TimeUnit;
@@ -34,9 +33,11 @@ public class Fridge {
         //Hier kann man nun Sensoren simulieren, um Gegenstände rauszunehmen und einzufügen
         while (true) {
 
-            takeItemOut(Constants.MILCH);
+            takeItemOut(constants.Constants.MILCH);
+            
             waitSeconds(2);
         }
+        
     }
 
     /**
@@ -64,6 +65,7 @@ public class Fridge {
      */
     private static void takeItemOut(String type) {
         sendMessage("-" + type);
+        System.out.println("Artikel genommen: "+type);
     }
 
     /**
@@ -73,6 +75,7 @@ public class Fridge {
      */
     private static void putItemIn(String type) {
         sendMessage("+" + type);
+        System.out.println("Artikel reingelegt: "+type);
     }
 
     private static void waitSeconds(int seconds) {
