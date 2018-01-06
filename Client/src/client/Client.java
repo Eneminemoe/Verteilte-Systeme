@@ -26,7 +26,7 @@ public class Client {
     static DatagramSocket datagramSocket;
     static String answerFromServer;
 
-    public Client() {
+    public Client(String[] args) {
 
     }
 
@@ -62,9 +62,7 @@ public class Client {
     public boolean sendMessage(String message) {
 
         byte[] sendData = new byte[PAYLOAD];
-        DatagramSocket sendSocket = null;
-        try {
-            sendSocket = new DatagramSocket();
+        try (DatagramSocket sendSocket = new DatagramSocket()) {
             InetAddress inetAddress = InetAddress.getByName("localhost");
             sendData = message.getBytes();
             DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, inetAddress, UDP_SERVER_PORT);
@@ -75,8 +73,6 @@ public class Client {
 
         } catch (IOException e) {
             return false;
-        } finally {
-            sendSocket.close();
         }
         return true;
     }

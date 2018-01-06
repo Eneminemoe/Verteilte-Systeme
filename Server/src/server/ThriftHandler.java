@@ -5,6 +5,7 @@
  */
 package server;
 
+import mqtt.CliParameters;
 import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.protocol.TProtocol;
@@ -20,18 +21,16 @@ public class ThriftHandler {
 
     //THRIFT CONSTANTS
     final static String ORDERITEMS = "9";
-
-
+    private int thriftport = 0;
 
     /**
-     * Bestellt Items über die Schnittstelle
-     * Bestellbare Items:
-     * public static final String MILCH = "Milch";
-       public static final String BUTTER = "Butter";
-       public static final String WURST = "Wurst";
-       public static final String YOGHURT = "Yoghurt";
-       public static final String SCHOKOLADE = "Schokolade";
-     * @return  
+     * Bestellt Items über die Schnittstelle Bestellbare Items: public static
+     * final String MILCH = "Milch"; public static final String BUTTER =
+     * "Butter"; public static final String WURST = "Wurst"; public static final
+     * String YOGHURT = "Yoghurt"; public static final String SCHOKOLADE =
+     * "Schokolade";
+     *
+     * @return
      */
     private static String orderItem(StoreService.Client client, String item, String number) throws TException {
 
@@ -41,27 +40,27 @@ public class ThriftHandler {
     /**
      * Rechnung anfordern
      */
-    private static String getInvoice(StoreService.Client client,String message) throws TException {
+    private static String getInvoice(StoreService.Client client, String message) throws TException {
         return client.invoice(message);
     }
 
     /**
      * Baut Verbinung zum Store auf via THRIFT Schnittstelle
      *
-     * @param item Item, das bestellt werden soll 
+     * @param item Item, das bestellt werden soll
      * @param number Anzahl der zu bestellenden Artikel
      * @param type 1: Bestellung, 2: Rechnung anfordern
-     * @return depending on chosen type 
-     * type 1: xitem x=Anzahl der gelieferten Artikel item: Artikeltyp
-     * type 2: Rechung der bestellten Artikel
+     * @return depending on chosen type type 1: xitem x=Anzahl der gelieferten
+     * Artikel item: Artikeltyp type 2: Rechung der bestellten Artikel
      */
-    public static String establishThriftConnection(String item,String number, int type) {
+    public static String establishThriftConnection(String item, String number, int type) {
 
+        
         String answer = "Store offline";
         try {
             TTransport transport;
 
-            transport = new TSocket(constants.Constants.THRIFT_HOST, constants.Constants.THRIFTPORT);
+            transport = new TSocket(constants.Constants.THRIFT_HOST, CliParameters.getInstance().getThriftport());
             transport.open();
 
             TProtocol protocol = new TBinaryProtocol(transport);
@@ -69,12 +68,12 @@ public class ThriftHandler {
 
             switch (type) {
                 case 1:
-                    System.out.println(ThriftHandler.class+", Item: " +item);
+                    System.out.println(ThriftHandler.class + ", Item: " + item);
                     answer = orderItem(client, item, number);
-                    System.out.println(ThriftHandler.class+", Answer: "+ answer);
+                    System.out.println(ThriftHandler.class + ", Answer: " + answer);
                     break;
                 case 2:
-                    answer = getInvoice(client,item);
+                    answer = getInvoice(client, item);
                     break;
                 default:;
             }

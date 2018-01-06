@@ -47,6 +47,22 @@ public class CliParameters {
      */
     private String store ="defaultStore";
     /**
+     * The Thriftport
+     */
+    private int Thriftport=constants.Constants.THRIFTPORT;
+    /**
+     * The Port the Server listens to on TCP
+     */
+    private int Tcp_Listening_Server_Socket_Port=constants.Constants.TCP_LISTENING_SERVER_SOCKET;
+    /**
+     * The Port the Applications listens to on UDP
+     */
+    private int Udp_Send_To_Port=constants.Constants.UDP_SEND_TO_PORT;
+    /**
+     * The Port the Applications sends through UDP
+     */
+    private int Udp_Listen_To_Port=constants.Constants.UDP_LISTEN_TO_PORT;
+    /**
      * The static getter for the CLI parameters instance.
      *
      * @return The CLI parameters instance.
@@ -141,5 +157,61 @@ public class CliParameters {
      */
     public void setStore(String store) {
         this.store = store;
+    }
+
+    /**
+     * @return the Thriftport
+     */
+    public int getThriftport() {
+        return Thriftport;
+    }
+
+    /**
+     * @param Thriftport the Thriftport to set
+     */
+    public void setThriftport(int Thriftport) {
+        this.Thriftport = Thriftport;
+    }
+
+    /**
+     * @return the Tcp_Listening_Server_Socket_Port
+     */
+    public int getTcp_Listening_Server_Socket_Port() {
+        return Tcp_Listening_Server_Socket_Port;
+    }
+
+    /**
+     * @param Tcp_Listening_Server_Socket_Port the Tcp_Listening_Server_Socket_Port to set
+     */
+    public void setTcp_Listening_Server_Socket_Port(int Tcp_Listening_Server_Socket_Port) {
+        this.Tcp_Listening_Server_Socket_Port = Tcp_Listening_Server_Socket_Port;
+    }
+
+    /**
+     * @return the Udp_Listening_Server_Socket_Port
+     */
+    public int getUdp_Send_To_Port() {
+        return Udp_Send_To_Port;
+    }
+
+    /**
+     * @param Udp_Send_To_Port the Udp_Listening_Server_Socket_Port to set
+     */
+    public void setUdp_Send_To_Port(int Udp_Send_To_Port) {
+        this.Udp_Send_To_Port = Udp_Send_To_Port;
+    }
+
+    /**
+     * @return the Udp_Listen_To_Port
+     */
+    public int getUdp_Listen_To_Port() {
+        return Udp_Listen_To_Port;
+    }
+
+    /**
+     * @param Udp_Listen_To_Port the Udp_Listen_To_Port to set
+     */
+    public void setUdp_Listen_To_Port(int Udp_Listen_To_Port) {
+        this.Udp_Listen_To_Port = Udp_Listen_To_Port;
     }
 }

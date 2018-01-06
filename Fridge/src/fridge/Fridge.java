@@ -11,6 +11,8 @@ import java.net.*;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import mqtt.CliParameters;
+import mqtt.CliProcessor;
 
 /**
  *
@@ -28,6 +30,7 @@ public class Fridge {
      */
     public static void main(String[] args) {
 
+        CliProcessor.getInstance().parseCliOptions(args);
         //Hier kann man nun Sensoren simulieren, um Gegenstände rauszunehmen und einzufügen
         while (true) {
 
@@ -37,8 +40,8 @@ public class Fridge {
     }
 
     /**
-     * @param message beihnhaltet Nachricht zum verschicken
-     * Sendet String per UDP an den Server
+     * @param message beihnhaltet Nachricht zum verschicken Sendet String per
+     * UDP an den Server
      */
     private static void sendMessage(String message) {
 
@@ -46,7 +49,7 @@ public class Fridge {
         try (DatagramSocket datagramSocket = new DatagramSocket()) {
             InetAddress inetAddress = InetAddress.getByName("localhost");
             sendData = message.getBytes();
-            DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, inetAddress, constants.Constants.UDP_SERVER_PORT);
+            DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, inetAddress, CliParameters.getInstance().getUdp_Send_To_Port());
             datagramSocket.send(sendPacket);
 
         } catch (IOException e) {

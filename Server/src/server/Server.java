@@ -9,6 +9,8 @@ import java.io.*;
 import java.net.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import mqtt.CliParameters;
+import mqtt.CliProcessor;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -38,12 +40,14 @@ public class Server extends Thread {
      */
     public static void main(String[] args) {
 
+        CliProcessor.getInstance().parseCliOptions(args);
+        
         items = new Items();
         htmlmaker = new HTMLMaker(items.getCurrentItemsArray());
 
         try {
-            datagramSocket = new DatagramSocket(constants.Constants.UDP_SERVER_PORT);
-            welcomeSocket = new ServerSocket(constants.Constants.TCP_LISTENING_SERVER_SOCKET);
+            datagramSocket = new DatagramSocket(CliParameters.getInstance().getUdp_Listen_To_Port());
+            welcomeSocket = new ServerSocket(CliParameters.getInstance().getTcp_Listening_Server_Socket_Port());
         } catch (SocketException ex) {
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -107,7 +111,7 @@ public class Server extends Thread {
         try (DatagramSocket sendSocket = new DatagramSocket()) {
             InetAddress inetAddress = InetAddress.getByName("localhost");
             sendData = message.getBytes();
-            DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, inetAddress, constants.Constants.UDP_CLIENT_PORT);
+            DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, inetAddress, CliParameters.getInstance().getUdp_Send_To_Port());
             sendSocket.send(sendPacket);
 
         } catch (IOException e) {

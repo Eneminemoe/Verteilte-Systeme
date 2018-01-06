@@ -81,7 +81,7 @@ public class Store extends Thread implements StoreService.Iface {
     }
 
     /**
-     * Function processes order between Store and Fridge
+     * Function processes order between Store and Fridge via Thrift
      *
      * @param message Anzahl und Typ Artikel in Form von xitem
      * @return String Antwort auf Anfrage
@@ -196,7 +196,7 @@ public class Store extends Thread implements StoreService.Iface {
      */
     public static void simpleServer(StoreService.Processor processor) {
         try {
-            TServerTransport serverTransport = new TServerSocket(constants.Constants.THRIFTPORT);
+            TServerTransport serverTransport = new TServerSocket(CliParameters.getInstance().getThriftport());
             TServer server = new TSimpleServer(new TServer.Args(serverTransport).processor(processor));
 
             System.out.println("Starting the Store server...");

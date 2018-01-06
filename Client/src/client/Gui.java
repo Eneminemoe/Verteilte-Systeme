@@ -133,7 +133,7 @@ public class Gui extends javax.swing.JFrame {
      */
     public static void main(String args[]) throws Exception {
 
-        client = new Client();
+        client = new Client(args);
 
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">

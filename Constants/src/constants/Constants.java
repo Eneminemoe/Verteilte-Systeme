@@ -80,8 +80,8 @@ public class Constants {
      * UDP Communication Constants
      */
     public static final int PAYLOAD_FOR_UDP = 1024;
-    public static final int UDP_SERVER_PORT = 6542;
-    public static final int UDP_CLIENT_PORT = 6543;
+    public static final int UDP_SEND_TO_PORT = 6543;
+    public static final int UDP_LISTEN_TO_PORT = 6543;
 
     /**
      * TCP Communication Constants
