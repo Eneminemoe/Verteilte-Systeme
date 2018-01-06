@@ -6,6 +6,7 @@ Um die Kommunikation zwischen mehreren Producern, Stores und Kühlschränken zu 
 * Kühlschrank und Server müssen angepasst sein: UDP - Ports
 * Server muss TCP-Port zugewiesen werden
 * Server muss THRIFT - Port des Empfängers kennen
+* Store muss THRIFT - Port zugewiesen werden zum Empfangen
 * Store und Producer benötigen jeweils einen eindeutigen Namen.
 * Parameter für MQTT müssen nicht geändert werden. DEFAULT-Werte zum Test ausreichend.
 
