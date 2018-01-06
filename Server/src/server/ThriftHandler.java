@@ -21,7 +21,6 @@ public class ThriftHandler {
 
     //THRIFT CONSTANTS
     final static String ORDERITEMS = "9";
-    private int thriftport = 0;
 
     /**
      * Bestellt Items über die Schnittstelle Bestellbare Items: public static
@@ -68,7 +67,6 @@ public class ThriftHandler {
 
             switch (type) {
                 case 1:
-                    System.out.println(ThriftHandler.class + ", Item: " + item);
                     answer = orderItem(client, item, number);
                     System.out.println(ThriftHandler.class + ", Answer: " + answer);
                     break;

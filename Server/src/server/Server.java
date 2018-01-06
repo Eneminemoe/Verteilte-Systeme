@@ -162,7 +162,7 @@ public class Server extends Thread {
     public static void orderItems(String itemToOrder) {
         String answer = ThriftHandler.establishThriftConnection(itemToOrder, ThriftHandler.ORDERITEMS, 1);
         
-        if (answer.contains("lieferbar")) {
+        if (answer.contains("vorhanden")) {
             LOGGER.info(answer);
         } else {
             items.changeItems(answer);

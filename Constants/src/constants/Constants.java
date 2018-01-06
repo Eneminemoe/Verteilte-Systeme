@@ -5,6 +5,8 @@
  */
 package constants;
 
+import java.util.Random;
+
 /**
  *
  * @author Jens
@@ -70,6 +72,25 @@ public class Constants {
     public enum Items {
         Milch, Butter, Wurst, Schokolade, Yoghurt
     }
+
+    /**
+     * Get randon enum
+     * @param <E> The Emum to get a Random from
+     */
+    public static class RandomEnum<E extends Enum> {
+
+        private static final Random RND = new Random();
+        private final E[] values;
+
+        public RandomEnum(Class<E> token) {
+            values = token.getEnumConstants();
+        }
+
+        public E random() {
+            return values[RND.nextInt(values.length)];
+        }
+    }
+
     public static final String MILCH = "Milch";
     public static final String BUTTER = "Butter";
     public static final String WURST = "Wurst";

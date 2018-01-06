@@ -5,7 +5,12 @@
  */
 package organizeoffers;
 
+import constants.Constants;
 import java.util.ArrayList;
+import java.util.Optional;
+import java.util.concurrent.ThreadLocalRandom;
+import mqtt.CliParameters;
+import mqtt.MessageParser;
 
 /**
  *
@@ -97,6 +102,7 @@ public class Offers {
 
     /**
      * Deletes Offer if it is equal to an existing
+     *
      * @param offer The offer to check
      * @return true if existing
      */
@@ -129,5 +135,100 @@ public class Offers {
                     + ": "
                     + o.getAnzahl());
         }
+    }
+
+    /**
+     * Function which generates an offer and stores it.
+     *
+     * @param item to offer
+     * @param number to offer
+     * @param price of offer
+     * @return String with offer made by MESSAGEPARSER.makeOffermessage
+     */
+    public String generateOffer(constants.Constants.Items item,
+            int number,
+             double price
+    ) {
+
+        
+        int Anzahl = number;
+        double p = price;
+        double price_rounded = Math.round(p * 100) / 100.0; //2 Nachkommastellen
+        String Artikel = "";
+        switch (item) {
+            case Milch:
+                Artikel = constants.Constants.MILCH;
+                break;
+            case Butter:
+                Artikel = constants.Constants.BUTTER;
+                break;
+            case Yoghurt:
+                Artikel = constants.Constants.YOGHURT;
+                break;
+            case Wurst:
+                Artikel = constants.Constants.WURST;
+                break;
+            case Schokolade:
+                Artikel = constants.Constants.SCHOKOLADE;
+                break;
+            default:
+
+        }
+        //Angebot merken
+        addOffer(new Offer(CliParameters.getInstance().getProducer(), Artikel, price_rounded, Anzahl));
+
+        //create Offer and Topic is set within makeOffermessage
+        return MessageParser.getInstance().makeOffermessage(
+                CliParameters.getInstance().getProducer(),
+                Artikel,
+                price_rounded,
+                Anzahl);
+
+    }
+    
+    /**
+     * Function which generates an offer and stores it. available: Milch,
+     * Yoghurt, Butter, Wurst, Schokolade
+     *
+     * @return String with generated offer made by MESSAGEPARSER.makeOffermessage
+     */
+    public String generateOffer() {
+
+        Constants.RandomEnum<Constants.Items> i = new Constants.RandomEnum<>(Constants.Items.class);
+        
+        
+        int Anzahl = ThreadLocalRandom.current().nextInt(1, 50 + 1); //Zufall 1-50
+        double p = ThreadLocalRandom.current().nextDouble(0.01, 3);
+        double price_rounded = Math.round(p * 100) / 100.0; //2 Nachkommastellen
+        String Artikel = "";
+        switch (i.random()) {
+            case Milch:
+                Artikel = constants.Constants.MILCH;
+                break;
+            case Butter:
+                Artikel = constants.Constants.BUTTER;
+                break;
+            case Yoghurt:
+                Artikel = constants.Constants.YOGHURT;
+                break;
+            case Wurst:
+                Artikel = constants.Constants.WURST;
+                break;
+            case Schokolade:
+                Artikel = constants.Constants.SCHOKOLADE;
+                break;
+            default:
+
+        }
+        //Angebot merken
+        addOffer(new Offer(CliParameters.getInstance().getProducer(), Artikel, price_rounded, Anzahl));
+
+        //create Offer and Topic is set within makeOffermessage
+        return MessageParser.getInstance().makeOffermessage(
+                CliParameters.getInstance().getProducer(),
+                Artikel,
+                price_rounded,
+                Anzahl);
+
     }
 }
