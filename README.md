@@ -10,6 +10,13 @@ Um die Kommunikation zwischen mehreren Producern, Stores und Kühlschränken zu 
 * Store und Producer benötigen jeweils einen eindeutigen Namen.
 * Parameter für MQTT müssen nicht geändert werden. DEFAULT-Werte zum Test ausreichend.
 
+Beispielkonfiguration:
+
+* Fridge: -u 7000
+* Server: -U 7000 -y 9090 -T 8000
+* Store: -s Edeka -y 9090 
+* Producer: -x Landwirt 
+
 
 HINWEIS: Nicht alle Parameter werden durchweg von allen Programmen genutzt.
 
@@ -43,7 +50,7 @@ Server bestellt bei Store nach, sobald Artikel unterhalb bestimmter Menge(Derzei
 
 Ein Objekt wird in Fridge erzeugt, welches den aktuellen Stand der Artikel speichert. 
 
-**Not Updated as of Nov17** **Nicht Funktionsfähig**
+**Not Updated as of Nov17 - Nicht Funktionsfähig**
 
 GUI und Client:
 Oberfläche, die die aktuellen Artikel anzeigt. 
