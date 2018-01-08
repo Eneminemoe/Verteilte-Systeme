@@ -42,7 +42,8 @@ public class Fridge {
         while (true) {
 
             waitSeconds(2);
-            randomAction();
+            takeItemOut(constants.Constants.BUTTER);
+            //randomAction();
             //takeRandomItem();
             //putRandomItem();
 

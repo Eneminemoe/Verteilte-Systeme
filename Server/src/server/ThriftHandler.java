@@ -49,17 +49,18 @@ public class ThriftHandler {
      * @param item Item, das bestellt werden soll
      * @param number Anzahl der zu bestellenden Artikel
      * @param type 1: Bestellung, 2: Rechnung anfordern
+     * @param port the Port to send the message to.
      * @return depending on chosen type type 1: xitem x=Anzahl der gelieferten
      * Artikel item: Artikeltyp type 2: Rechung der bestellten Artikel
      */
-    public static String establishThriftConnection(String item, String number, int type) {
+    public static String establishThriftConnection(String item, String number, int type, int port) {
 
         
         String answer = "Store offline";
         try {
             TTransport transport;
 
-            transport = new TSocket(constants.Constants.THRIFT_HOST, CliParameters.getInstance().getThriftport());
+            transport = new TSocket(constants.Constants.THRIFT_HOST, port);
             transport.open();
 
             TProtocol protocol = new TBinaryProtocol(transport);

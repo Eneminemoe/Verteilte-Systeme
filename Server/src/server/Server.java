@@ -159,7 +159,7 @@ public class Server extends Thread {
      * @param itemToOrder 
      */
     public static void orderItems(String itemToOrder) {
-        String answer = ThriftHandler.establishThriftConnection(itemToOrder, ThriftHandler.ORDERITEMS, 1);
+        String answer = ThriftHandler.establishThriftConnection(itemToOrder, ThriftHandler.ORDERITEMS, 1, CliParameters.getInstance().getThriftport());
         
         if (answer.contains("vorhanden")) {
             LOGGER.info(answer);

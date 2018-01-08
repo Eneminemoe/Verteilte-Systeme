@@ -9,6 +9,7 @@ import java.io.*;
 import java.net.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import mqtt.CliParameters;
 
 /**
  *
@@ -62,7 +63,7 @@ public class TCPHandling extends Server {
             if (message.contains("request") && message.contains("invoice")) {
                 //Rechnung angefordert
                 
-                sendMessageTCP(ThriftHandler.establishThriftConnection("", "0", 2));
+                sendMessageTCP(ThriftHandler.establishThriftConnection("", "0", 2, CliParameters.getInstance().getThriftport()));
             } else if (message.contains("refresh=Aktualisieren")) {
                 //Aktuelle HTML-File senden
                 
