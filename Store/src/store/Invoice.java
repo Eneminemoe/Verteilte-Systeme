@@ -45,8 +45,6 @@ public class Invoice {
      */
     public void setOrder(int num, String type) {
 
-        System.out.println(type);
-
         int_sum += num;
         switch (type) {
 

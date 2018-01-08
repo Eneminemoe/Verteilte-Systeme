@@ -11,6 +11,7 @@ import java.net.*;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.Random;
 import mqtt.CliParameters;
 import mqtt.CliProcessor;
 
@@ -25,22 +26,50 @@ import mqtt.CliProcessor;
  */
 public class Fridge {
 
+    private static constants.Constants.RandomEnum<constants.Constants.Items> itemtype;
+
     /**
-     * Hier kann man Sensoren simulieren, um Gegenstände rauszunehmen und einzufügen 
+     * Hier kann man Sensoren simulieren, um Gegenstände rauszunehmen und
+     * einzufügen
+     *
      * @param args the command line arguments
      */
     public static void main(String[] args) {
 
         CliProcessor.getInstance().parseCliOptions(args);
-        
-        constants.Constants.RandomEnum<constants.Constants.Items> itemtype = new Constants.RandomEnum<>(Constants.Items.class);
+        itemtype = new Constants.RandomEnum<>(Constants.Items.class);
+
         while (true) {
 
             waitSeconds(2);
-            takeItemOut(constants.Constants.parseItemToString(itemtype.random())); //Nimm zufälliges Item aus Kühlschrank
+            randomAction();
+            //takeRandomItem();
+            //putRandomItem();
 
         }
 
+    }
+
+    /**
+     * Nimmt Item aus dem Külschrank oder legt Item rein. Item und Aktion sind
+     * zufällig
+     */
+    private static void randomAction() {
+
+        Random r = new Random();
+        if (r.nextBoolean()) {
+            takeRandomItem();
+        } else {
+            putRandomItem();
+        }
+    }
+
+    private static void takeRandomItem() {
+        takeItemOut(constants.Constants.parseItemToString(itemtype.random())); //Nimm zufälliges Item aus Kühlschrank
+    }
+
+    private static void putRandomItem() {
+        putItemIn(constants.Constants.parseItemToString(itemtype.random())); //Nimm zufälliges Item aus Kühlschrank}
     }
 
     /**

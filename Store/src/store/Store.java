@@ -181,6 +181,7 @@ public class Store extends Thread implements StoreService.Iface {
             }
 
             if (inStock) {
+                System.out.println("Bestellung wird verarbeitet!");
                 makeInvoice(message, tmp);
                 System.out.println("Bestellung versendet: " + tmp + " " + message);
                 return tmp + " " + message + " bestellt.";
