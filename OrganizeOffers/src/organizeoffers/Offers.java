@@ -7,7 +7,6 @@ package organizeoffers;
 
 import constants.Constants;
 import java.util.ArrayList;
-import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 import mqtt.CliParameters;
 import mqtt.MessageParser;
@@ -229,5 +228,10 @@ public class Offers {
                 price_rounded,
                 Anzahl);
 
+    }
+    
+    public String getLastOffer(){
+    
+    return offers.get(offers.size()-1).getArtikel()+":"+offers.get(offers.size()-1).getAnzahl()+":"+offers.get(offers.size()-1).getPreis();
     }
 }

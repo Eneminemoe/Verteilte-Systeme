@@ -49,7 +49,8 @@ public class TCPHandling extends Server {
     public void run() {
 
         String message = receiveMessageTCP();
-
+        
+        
         if (message.contains(FAVICON)) {
              //favicon requests ignore
         }
@@ -98,7 +99,7 @@ public class TCPHandling extends Server {
      * 
      * @return String mit der empfangenen Nachricht
      */
-    private static String receiveMessageTCP() {
+    public static String receiveMessageTCP() {
 
         String receivedMessage = "";
         String tmp;
@@ -108,8 +109,10 @@ public class TCPHandling extends Server {
             while (!done) {
 
                 tmp = inFromClient.readLine();
+                
                 receivedMessage += tmp;
-                if (tmp.equals("")) {
+                System.out.println(tmp);
+                if (tmp.equals("") ||tmp==null) {
                     done = true;
                 }
             }
@@ -122,8 +125,9 @@ public class TCPHandling extends Server {
 
     /**
      * Versendet Nachricht via TCP
+     * @param message to send
      */
-    private static void sendMessageTCP(String message) {
+    public static void sendMessageTCP(String message) {
 
         try {
             outToClient.writeBytes(message); //Ziemlich hässlich, funktioniert aber

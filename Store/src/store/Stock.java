@@ -202,15 +202,19 @@ public class Stock {
     }
 
     /**
-     * Function to order the best offer for one Item offer
+     * Function to order the best offer for one Item
      *
      * @param offers Object Offers with every offer via MQTT
-     * @param item
+     * @param item to check offer for
      * @return if order succesfull
      */
     public synchronized boolean checkStockandOrder(Offers offers, constants.Constants.Items item) {
 
         Offer offer = null;
+
+        if (offers == null) {
+            return false;
+        }
 
         switch (item) {
 

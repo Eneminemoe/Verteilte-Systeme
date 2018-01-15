@@ -5,7 +5,6 @@
  */
 package server;
 
-import mqtt.CliParameters;
 import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.protocol.TProtocol;

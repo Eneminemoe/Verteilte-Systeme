@@ -5,6 +5,7 @@
  */
 package producer;
 
+import constants.Constants;
 import mqtt.Publisher;
 import mqtt.CliProcessor;
 import java.util.concurrent.TimeUnit;
@@ -39,6 +40,8 @@ public class Producer {
         Subscriber subscriber = new Subscriber(CliParameters.getInstance().getProducer() + constants.Constants.TOPIC_RECEIVE_ORDER);
         subscriber.run();
         
+        //testFunction(1);
+        
         while (true) {
             
             messageToSend = offers.generateOffer();
@@ -65,4 +68,37 @@ public class Producer {
         }
     }
 
+        //TEST
+    
+    private static void testFunction(int test) {
+
+        switch (test) {
+            case 1:
+
+                //DOES Offer generation work?
+                offers.generateOffer(Constants.Items.Milch, 10, 0.5);
+                System.out.println(offers.getLastOffer());
+                break;
+            case 2:
+                //How long does it take to generate an offer?
+                long startTime,
+                 endTime,
+                 duration;
+
+                startTime = System.nanoTime(); // Zeit messen
+                offers.generateOffer(Constants.Items.Milch, 10, 0.5); // Angebot generieren
+                endTime = System.nanoTime(); // Zeit messen
+                duration = endTime - startTime;
+                System.out.println("Time elapsed: " + duration + " nanoseconds."); //Zeitmessung
+                System.out.println("Time elapsed: " + ((double) duration / 1000000) + " milliseconds."); //zeitmessung
+                System.out.println("Time elapsed: " + ((double) duration / 1000000000) + " seconds."); //zeitmessung
+                
+                
+                break;
+            default:
+                System.out.println("Test nicht vorhanden");
+        }
+    }
+
+    
 }

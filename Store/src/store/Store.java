@@ -5,6 +5,7 @@
  */
 package store;
 
+import constants.Constants;
 import constants.SharedVariablesBetweenThreads;
 import organizeoffers.Offers;
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import org.apache.thrift.server.*;
 import org.apache.thrift.transport.*;
 import mqtt.CliProcessor;
 import mqtt.CliParameters;
+import mqtt.Publisher;
 
 /**
  *
@@ -60,6 +62,8 @@ public class Store extends Thread implements StoreService.Iface {
             Subscriber subscriberb = new Subscriber(CliParameters.getInstance().getStore()
                     + constants.Constants.TOPIC_CONFIRMATION);
             subscriberb.run();
+
+            testFunction(2);
 
             /**
              * THRIFT
@@ -282,6 +286,36 @@ public class Store extends Thread implements StoreService.Iface {
 
     public static Store getInstance() {
         return store;
+    }
+
+    //TEST
+    private static void testFunction(int test) {
+
+        switch (test) {
+            case 1:
+
+                //DOES ordering via mqtt work
+                offers.generateOffer(Constants.Items.Milch, 20, 0.30); //Anegbot generieren, damit offer != null
+                stock_instance.checkStockandOrder(offers);
+                break;
+            case 2:
+                //How long does it take to order an item?
+                long startTime,
+                 endTime,
+                 duration;
+                offers.generateOffer(Constants.Items.Milch, 20, 0.30); //Anegbot generieren, damit offer != null
+                startTime = System.nanoTime(); // Zeit messen
+                stock_instance.checkStockandOrder(offers);
+                endTime = System.nanoTime(); // Zeit messen
+                duration = endTime - startTime;
+                System.out.println("Time elapsed: " + duration + " nanoseconds."); //Zeitmessung
+                System.out.println("Time elapsed: " + ((double) duration / 1000000) + " milliseconds."); //zeitmessung
+                System.out.println("Time elapsed: " + ((double) duration / 1000000000) + " seconds."); //zeitmessung
+
+                break;
+            default:
+                System.out.println("Test nicht vorhanden");
+        }
     }
 
 }

@@ -23,11 +23,9 @@ import org.slf4j.LoggerFactory;
  */
 public class Server extends Thread {
 
-
-
     //THRIFT CONSTANTS
     final static String ORDER = "9";
-    
+
     static DatagramSocket datagramSocket; //UDP
     static ServerSocket welcomeSocket; //TCP-LISTENING
     protected static Server tcp;
@@ -41,7 +39,8 @@ public class Server extends Thread {
     public static void main(String[] args) {
 
         CliProcessor.getInstance().parseCliOptions(args);
-        
+        System.out.println("Port: " + CliParameters.getInstance().getTcp_Listening_Server_Socket_Port());
+
         items = new Items();
         htmlmaker = new HTMLMaker(items.getCurrentItemsArray());
 
@@ -56,6 +55,8 @@ public class Server extends Thread {
 
         tcp = new Server();
         tcp.start();
+
+        testFunction(2);
 
         while (true) {
 
@@ -154,13 +155,13 @@ public class Server extends Thread {
     }
 
     /**
-     * Bestellt Artikel im Store vie THRIFT 
-     * Anzahl auf 9 festgelegt
-     * @param itemToOrder 
+     * Bestellt Artikel im Store vie THRIFT Anzahl auf 9 festgelegt
+     *
+     * @param itemToOrder
      */
     public static void orderItems(String itemToOrder) {
         String answer = ThriftHandler.establishThriftConnection(itemToOrder, ThriftHandler.ORDERITEMS, 1, CliParameters.getInstance().getThriftport());
-        
+
         if (answer.contains("vorhanden")) {
             LOGGER.info(answer);
         } else {
@@ -171,8 +172,8 @@ public class Server extends Thread {
     /**
      * @param int test
      *
-     * test = 1: Wie lange dauert das Bearbeiten der Anfrage und Versenden der
-     * HTML FILE
+     * test = 1: Performance: Wie lange dauert das Bearbeiten der Anfrage und
+     * Versenden der test = 2: Funnktional: Funktioniert das Versenden der HTML-File
      */
     private static void testFunction(int test) {
 
@@ -198,6 +199,19 @@ public class Server extends Thread {
                     Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
+                break;
+            case 2:
+
+        {
+            try {
+                //Windows
+                Runtime.getRuntime().exec(new String[]{"cmd", "/c","start chrome 127.0.0.1:"+CliParameters.getInstance().getTcp_Listening_Server_Socket_Port()+"/index.html"});
+                //Linux
+                //Runtime.getRuntime().exec(new String[] { "chromium-browser", "127.0.0.1"+CliParameters.getInstance().getTcp_Listening_Server_Socket_Port()+"/index.html" });
+            } catch (IOException ex) {
+                Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
                 break;
             default:
                 System.out.println("Test nicht vorhanden");
